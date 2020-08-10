@@ -16,4 +16,4 @@ Followed [this](http://www.multigesture.net/articles/how-to-write-an-emulator-ch
 
 Sites used for reference
 * [Cowgods chip 8 technical reference](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#Fx1E)
-* [Wikipedia article for a good overview] (https://en.wikipedia.org/wiki/CHIP-8)
+* [Wikipedia article for a good overview](https://en.wikipedia.org/wiki/CHIP-8)
