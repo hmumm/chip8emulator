@@ -26,12 +26,27 @@ namespace HJM.Chip8.CPU
         private ushort stackPointer;
         private byte[] key = new byte[16];
 
+        private byte[] fontSet = new byte[80];
+
         /// <summary>
-        /// Initalizes memory and everything for emulation.
+        /// Initalizes memory for emulation.
         /// </summary>
         public void Initalize()
         {
-            throw new NotImplementedException();
+            programCounter = 0x200;
+            opCode = 0;
+            indexRegister = 0;
+            stackPointer = 0;
+            stack = new ushort[16];
+            registers = new byte[16];
+            memory = new byte[4096];
+
+            // TODO implement font set
+            for (int i = 0; i < 80; i++)
+                memory[i] = fontSet[i];
+
+            delayTimer = 0;
+            soundTimer = 0;
         }
 
         /// <summary>
@@ -49,7 +64,8 @@ namespace HJM.Chip8.CPU
         public void EmulateCycle()
         {
             // Fetch Opcode
-
+            // Convert 2 1 byte memory addresses to 1 2 byte op code
+            
             // Decode Opcode
             // Execute Opcode
 
