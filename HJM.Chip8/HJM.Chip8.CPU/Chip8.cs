@@ -125,7 +125,7 @@ namespace HJM.Chip8.CPU
                 case 0x3000: // 3xkk - SE Vx, byte
                              // Skip next instruction if Vx = kk.
                              // The interpreter compares register Vx to kk, and if they are equal, increments the program counter by 2.
-                    if (memory[(ushort)((opCode & 0x0F00) >> 8)] == (ushort)(opCode & 0x00FF))
+                    if (registers[(ushort)((opCode & 0x0F00) >> 8)] == (ushort)(opCode & 0x00FF))
                     {
                         programCounter += 2;
                     } else
@@ -137,7 +137,7 @@ namespace HJM.Chip8.CPU
                 case 0x4000: // 4xkk - SNE Vx, byte
                              // Skip next instruction if Vx != kk.
                              // The interpreter compares register Vx to kk, and if they are not equal, increments the program counter by 2.
-                    if (memory[(ushort)((opCode & 0x0F00) >> 8)] != (ushort)(opCode & 0x00FF))
+                    if (registers[(ushort)((opCode & 0x0F00) >> 8)] != (ushort)(opCode & 0x00FF))
                     {
                         programCounter += 2;
                     }
@@ -150,7 +150,7 @@ namespace HJM.Chip8.CPU
                 case 0x5000: // 5xy0 - SE Vx, Vy
                              // Skip next instruction if Vx = Vy.
                              // The interpreter compares register Vx to register Vy, and if they are equal, increments the program counter by 2.
-                    if (memory[(opCode & 0x0F00) >> 8] == memory[(opCode & 0x00F0) >> 4])
+                    if (registers[(opCode & 0x0F00) >> 8] == registers[(opCode & 0x00F0) >> 4])
                     {
                         programCounter += 2;
                     }
@@ -162,14 +162,14 @@ namespace HJM.Chip8.CPU
                 case 0x6000: // 6xkk - LD Vx, byte
                              // Set Vx = kk.
                              // The interpreter puts the value kk into register Vx.
-                    memory[(opCode & 0x0F00) >> 8] = (byte)(opCode & 0x00FF);
+                    registers[(opCode & 0x0F00) >> 8] = (byte)(opCode & 0x00FF);
                     programCounter += 2;
                     break;
 
                 case 0x7000: // 7xkk - ADD Vx, byte
                              // Set Vx = Vx + kk.
                              // Adds the value kk to the value of register Vx, then stores the result in Vx.
-                    memory[(opCode & 0x0F00) >> 8] = (byte)(memory[(opCode & 0x0F00)] + (opCode & 0x00FF));
+                    registers[(opCode & 0x0F00) >> 8] = (byte)(registers[(opCode & 0x0F00)] + (opCode & 0x00FF));
                     programCounter += 2;
                     break;
 
@@ -179,7 +179,7 @@ namespace HJM.Chip8.CPU
                         case 0x0000: // 8xy0 - LD Vx, Vy
                                      // Set Vx = Vy.
                                      // Stores the value of register Vy in register Vx.
-                            memory[(opCode & 0x0F00) >> 8] = memory[(opCode & 0x00F0) >> 4];
+                            registers[(opCode & 0x0F00) >> 8] = registers[(opCode & 0x00F0) >> 4];
                             programCounter += 2;
                             break;
 
@@ -187,7 +187,7 @@ namespace HJM.Chip8.CPU
                                      // Set Vx = Vx OR Vy.
                                      //  Performs a bitwise OR on the values of Vx and Vy, then stores the result in Vx. 
                                      // A bitwise OR compares the corrseponding bits from two values, and if either bit is 1, then the same bit in the result is also 1. Otherwise, it is 0. 
-                            memory[(opCode & 0x0F00) >> 8] = (byte)(memory[(opCode & 0x0F00) >> 8] | memory[(opCode & 0x00F0) >> 4]);
+                            registers[(opCode & 0x0F00) >> 8] = (byte)(registers[(opCode & 0x0F00) >> 8] | registers[(opCode & 0x00F0) >> 4]);
                             programCounter += 2;
                             break;
 
@@ -195,7 +195,7 @@ namespace HJM.Chip8.CPU
                                      // Set Vx = Vx AND Vy.
                                      // Performs a bitwise AND on the values of Vx and Vy, then stores the result in Vx. 
                                      // A bitwise AND compares the corrseponding bits from two values, and if both bits are 1, then the same bit in the result is also 1. Otherwise, it is 0. 
-                            memory[(opCode & 0x0F00) >> 8] = (byte)(memory[(opCode & 0x0F00) >> 8] & memory[(opCode & 0x00F0) >> 4]);
+                            registers[(opCode & 0x0F00) >> 8] = (byte)(registers[(opCode & 0x0F00) >> 8] & registers[(opCode & 0x00F0) >> 4]);
                             programCounter += 2;
                             break;
 
@@ -203,7 +203,7 @@ namespace HJM.Chip8.CPU
                                      // Set Vx = Vx XOR Vy.
                                      // Performs a bitwise exclusive OR on the values of Vx and Vy, then stores the result in Vx. 
                                      // An exclusive OR compares the corrseponding bits from two values, and if the bits are not both the same, then the corresponding bit in the result is set to 1. Otherwise, it is 0. 
-                            memory[(opCode & 0x0F00) >> 8] = (byte)(memory[(opCode & 0x0F00) >> 8] ^ memory[(opCode & 0x00F0) >> 4]);
+                            registers[(opCode & 0x0F00) >> 8] = (byte)(registers[(opCode & 0x0F00) >> 8] ^ registers[(opCode & 0x00F0) >> 4]);
                             programCounter += 2;
                             break;
 
@@ -222,47 +222,47 @@ namespace HJM.Chip8.CPU
                         case 0x0005: // 8xy5 - SUB Vx, Vy
                                      // Set Vx = Vx - Vy, set VF = NOT borrow.
                                      // If Vx > Vy, then VF is set to 1, otherwise 0. Then Vy is subtracted from Vx, and the results stored in Vx.
-                            if (memory[(opCode & 0x0F00) >> 8] > memory[(opCode & 0x00F0) >> 4])
+                            if (registers[(opCode & 0x0F00) >> 8] > registers[(opCode & 0x00F0) >> 4])
                             {
-                                memory[0xF] = 1;
+                                registers[0xF] = 1;
                             } else
                             {
-                                memory[0xF] = 0;
+                                registers[0xF] = 0;
                             }
 
-                            memory[(opCode & 0x0F00) >> 8] = (byte)(memory[(opCode & 0x0F00) >> 8] - memory[(opCode & 0x00F0) >> 4]);
+                            registers[(opCode & 0x0F00) >> 8] = (byte)(registers[(opCode & 0x0F00) >> 8] - registers[(opCode & 0x00F0) >> 4]);
                             programCounter += 2;
                             break;
 
                         case 0x0006: // 8xy6 - SHR Vx {, Vy}
                                      // Set Vx = Vx SHR 1.
                                      //  If the least-significant bit of Vx is 1, then VF is set to 1, otherwise 0. Then Vx is divided by 2.
-                            memory[0xF] = (byte)(memory[(opCode & 0x0F00) >> 8] & 0x1); // if the last bit of Vx is one set VF to 1, otherwise set to 0
-                            memory[(opCode & 0x0F00) >> 8] = (byte)(memory[(opCode & 0x0F00) >> 8] / 2);
+                            registers[0xF] = (byte)(registers[(opCode & 0x0F00) >> 8] & 0x1); // if the last bit of Vx is one set VF to 1, otherwise set to 0
+                            registers[(opCode & 0x0F00) >> 8] = (byte)(registers[(opCode & 0x0F00) >> 8] / 2);
                             programCounter += 2;
                             break;
 
                         case 0x0007: // 8xy7 - SUBN Vx, Vy
                                      // Set Vx = Vy - Vx, set VF = NOT borrow.
                                      // If Vy > Vx, then VF is set to 1, otherwise 0. Then Vx is subtracted from Vy, and the results stored in Vx.
-                            if (memory[(opCode & 0x0F00) >> 8] > memory[(opCode & 0x00F0) >> 4])
+                            if (registers[(opCode & 0x0F00) >> 8] > registers[(opCode & 0x00F0) >> 4])
                             {
-                                memory[0xF] = 1;
+                                registers[0xF] = 1;
                             }
                             else
                             {
-                                memory[0xF] = 0;
+                                registers[0xF] = 0;
                             }
 
-                            memory[(opCode & 0x0F00) >> 8] = (byte)(memory[(opCode & 0x00F0) >> 4] - memory[(opCode & 0x0F00) >> 8]);
+                            registers[(opCode & 0x0F00) >> 8] = (byte)(registers[(opCode & 0x00F0) >> 4] - registers[(opCode & 0x0F00) >> 8]);
                             programCounter += 2;
                             break;
 
                         case 0x000E: // 8xyE - SHL Vx {, Vy}
                                      // Set Vx = Vx SHL 1.
                                      // If the most-significant bit of Vx is 1, then VF is set to 1, otherwise to 0. Then Vx is multiplied by 2.
-                            memory[0xF] = (byte)(memory[(opCode & 0x0F00) >> 8] & 0x1); // if the last bit of Vx is one set VF to 1, otherwise set to 0
-                            memory[(opCode & 0x0F00) >> 8] = (byte)(memory[(opCode & 0x0F00) >> 8] * 2);
+                            registers[0xF] = (byte)(registers[(opCode & 0x0F00) >> 8] & 0x1); // if the last bit of Vx is one set VF to 1, otherwise set to 0
+                            registers[(opCode & 0x0F00) >> 8] = (byte)(registers[(opCode & 0x0F00) >> 8] * 2);
                             programCounter += 2;
                             break;
 
@@ -274,7 +274,7 @@ namespace HJM.Chip8.CPU
                 case 0x9000: // 9xy0 - SNE Vx, Vy
                              // Skip next instruction if Vx != Vy.
                              // The values of Vx and Vy are compared, and if they are not equal, the program counter is increased by 2.
-                    if (memory[(opCode & 0x0F00) >> 8] != memory[(opCode & 0x00F0) >> 4])
+                    if (registers[(opCode & 0x0F00) >> 8] != registers[(opCode & 0x00F0) >> 4])
                     {
                         programCounter += 4;
                     } else
@@ -293,14 +293,14 @@ namespace HJM.Chip8.CPU
                 case 0xB000: // Bnnn - JP V0, addr
                              // Jump to location nnn + V0.
                              // The program counter is set to nnn plus the value of V0.
-                    programCounter = (ushort)((opCode & 0x0FFF) + memory[0]);
+                    programCounter = (ushort)((opCode & 0x0FFF) + registers[0]);
                     break;
 
                 case 0xC000: // Cxkk - RND Vx, byte
                              // Set Vx = random byte AND kk.
                              // The interpreter generates a random number from 0 to 255, which is then ANDed with the value kk. The results are stored in Vx. See instruction 8xy2 for more information on AND.
                     Random rand = new Random();
-                    memory[(opCode & 0x0F00) >> 8] = (byte)(rand.Next(255) & (opCode & 0x00FF));
+                    registers[(opCode & 0x0F00) >> 8] = (byte)(rand.Next(255) & (opCode & 0x00FF));
                     programCounter += 2;
                     break;
 
@@ -340,7 +340,7 @@ namespace HJM.Chip8.CPU
                         case 0x009E: // Ex9E - SKP Vx
                                      // Skip next instruction if key with the value of Vx is pressed.
                                      // Checks the keyboard, and if the key corresponding to the value of Vx is currently in the down position, PC is increased by 2.
-                            if (key[memory[(opCode & 0x0F00) >> 8]] != 0)
+                            if (key[registers[(opCode & 0x0F00) >> 8]] != 0)
                                 programCounter += 4;
                             else
                                 programCounter += 2;
@@ -349,7 +349,7 @@ namespace HJM.Chip8.CPU
                         case 0x00A1: // ExA1 - SKNP Vx
                                      // Skip next instruction if key with the value of Vx is not pressed.
                                      // Checks the keyboard, and if the key corresponding to the value of Vx is currently in the up position, PC is increased by 2.
-                            if (key[memory[(opCode & 0x0F00) >> 8]] == 0)
+                            if (key[registers[(opCode & 0x0F00) >> 8]] == 0)
                                 programCounter += 4;
                             else
                                 programCounter += 2;
@@ -363,7 +363,7 @@ namespace HJM.Chip8.CPU
                         case 0x0007: // Fx07 - LD Vx, DT
                                      // Set Vx = delay timer value.
                                      // The value of DT is placed into Vx.
-                            memory[(opCode & 0x0F00) >> 8] = delayTimer;
+                            registers[(opCode & 0x0F00) >> 8] = delayTimer;
                             programCounter += 2;
                             break;
 
@@ -385,7 +385,7 @@ namespace HJM.Chip8.CPU
 
                             if(keyValue > -1)
                             {
-                                memory[(opCode & 0x0F00) >> 8] = (byte)keyValue;
+                                registers[(opCode & 0x0F00) >> 8] = (byte)keyValue;
                                 programCounter += 2;
                             }
                             // if no value is found, don't update the programCounter i.e. continue executing this instruction
@@ -409,6 +409,13 @@ namespace HJM.Chip8.CPU
                                      // Set I = I + Vx.
                                      // The values of I and Vx are added, and the results are stored in I.
                             indexRegister += (byte)((opCode & 0x0F00) >> 8);
+                            programCounter += 2;
+                            break;
+
+                        case 0x0029: // Fx29 - LD F, Vx
+                                     // Set I = location of sprite for digit Vx.
+                                     // The value of I is set to the location for the hexadecimal sprite corresponding to the value of Vx. See section 2.4, Display, for more information on the Chip-8 hexadecimal font.
+                            indexRegister = (ushort)(registers[(opCode & 0x0F00) >> 8] * 0x5);
                             break;
 
                         case 0x0033: // Fx33 - LD B, Vx
@@ -419,6 +426,27 @@ namespace HJM.Chip8.CPU
                             memory[indexRegister + 2] = (byte)((registers[(opCode & 0x0F00) >> 8] % 100) % 10);
                             programCounter += 2;
                             break;
+
+                        case 0x0055: // Fx55 - LD [I], Vx
+                                     // Store registers V0 through Vx in memory starting at location I.
+                                     // The interpreter copies the values of registers V0 through Vx into memory, starting at the address in I.
+                            for (int i = 0; i <= (opCode & 0x0F00) >> 8; i++)
+                            {
+                                memory[indexRegister + i] = registers[i];
+                            }
+                            programCounter += 2;
+                            break;
+
+                        case 0x0065: // Fx65 - LD Vx, [I]
+                                     // Read registers V0 through Vx from memory starting at location I.
+                                     // The interpreter reads values from memory starting at location I into registers V0 through Vx.
+                            for (int i = 0; i <= (opCode & 0x0F00) >> 8; i++)
+                            {
+                                registers[i] = memory[indexRegister + i];
+                            }
+                            programCounter += 2;
+                            break;
+
                         default:
                             throw new Exception("Unknown opcode [0x0000]: 0x" + opCode);
                     }
