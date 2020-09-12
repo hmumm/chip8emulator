@@ -12,11 +12,16 @@ namespace HJM.Chip8.CPU
     /// </summary>
     public class Chip8
     {
+        /// <summary>
+        /// Whether the screen needs to be drawn or not
+        /// </summary>
         public bool DrawFlag { get; set; }
         public ushort OpCode { get; set; }
-        //0x000-0x1FF - Chip 8 interpreter(contains font set in emu)
-        //0x050-0x0A0 - Used for the built in 4x5 pixel font set(0-F)
-        //0x200-0xFFF - Program ROM and work RAM
+        /// <summary>
+        /// 0x000-0x1FF - Chip 8 interpreter(contains font set in emu)
+        /// 0x050-0x0A0 - Used for the built in 4x5 pixel font set(0-F)
+        /// 0x200-0xFFF - Program ROM and work RAM
+        /// </summary>
         public byte[] Memory { get; set; } = new byte[4096];
         public byte[] Registers { get; set; } = new byte[16];
         public ushort IndexRegister { get; set; }
