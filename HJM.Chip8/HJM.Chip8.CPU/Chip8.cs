@@ -96,7 +96,7 @@ namespace HJM.Chip8.CPU
             switch (OpCode & 0xF000)
             {
                 case 0x0000:
-                    switch (OpCode & 0x000F)
+                    switch (OpCode & 0x00FF)
                     {
                         case 0x00E0: //  00E0 - CLS
                                      //  Clear the display.
@@ -105,15 +105,15 @@ namespace HJM.Chip8.CPU
                             ProgramCounter += 2;
                             break;
 
-                        case 0x000E: // 00EE - RET
+                        case 0x00EE: // 00EE - RET
                                      // Return from a subroutine.
                                      // The interpreter sets the program counter to the address at the top of the stack, then subtracts 1 from the stack pointer.
-                            ProgramCounter = Stack[StackPointer];
                             StackPointer -= 1;
+                            ProgramCounter = Stack[StackPointer];
                             break;
 
                         default:
-                            throw new Exception("Unknown opcode [0x0000]: 0x" + OpCode);
+                            throw new Exception("Unknown opCode: 0x" + Convert.ToString(OpCode, toBase: 16));
                     }
                     break;
 
@@ -275,7 +275,7 @@ namespace HJM.Chip8.CPU
                             break;
 
                         default:
-                            throw new Exception("Unknown opcode [0x0000]: 0x" + OpCode);
+                            throw new Exception("Unknown opCode: 0x" + Convert.ToString(OpCode, toBase: 16));
                     }
                     break;
 
@@ -361,6 +361,9 @@ namespace HJM.Chip8.CPU
                                 ProgramCounter += 4;
                             else
                                 ProgramCounter += 2;
+                            break;
+                        default:
+                            throw new Exception("Unknown opCode: 0x" + Convert.ToString(OpCode, toBase: 16));
                             break;
                     }
                     break;
@@ -456,7 +459,7 @@ namespace HJM.Chip8.CPU
                             break;
 
                         default:
-                            throw new Exception("Unknown opcode [0x0000]: 0x" + OpCode);
+                            throw new Exception("Unknown opCode: 0x" + Convert.ToString(OpCode, toBase: 16));
                     }
                     break;
 
