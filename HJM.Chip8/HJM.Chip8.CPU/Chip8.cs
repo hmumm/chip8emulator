@@ -480,6 +480,9 @@ namespace HJM.Chip8.CPU
                 // play sound
                 SoundTimer--;
                 SoundFlag = true;
+            } else
+            {
+                SoundFlag = false;
             }
         }
 
