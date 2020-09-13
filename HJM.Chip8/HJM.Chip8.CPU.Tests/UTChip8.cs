@@ -189,5 +189,403 @@ namespace HJM.Chip8.CPU.Tests
 
             Assert.AreEqual(0x05, chip8.Registers[0]);
         }
+
+        [Test]
+        public void Op8xy1()
+        {
+            chip8.Registers[0] = 0x0;
+            chip8.Registers[1] = 0x1;
+
+            // set the first instruction to 0x8011
+            chip8.Memory[0x0200] = 0x80;
+            chip8.Memory[0x0201] = 0x11;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x1, chip8.Registers[0]);
+        }
+
+        [Test]
+        public void Op8xy2()
+        {
+            chip8.Registers[0] = 0x2;
+            chip8.Registers[1] = 0x1;
+
+            // set the first instruction to 0x8012
+            chip8.Memory[0x0200] = 0x80;
+            chip8.Memory[0x0201] = 0x12;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x0, chip8.Registers[0]);
+        }
+
+        [Test]
+        public void Op8xy3()
+        {
+            chip8.Registers[0] = 0x2;
+            chip8.Registers[1] = 0x1;
+
+            // set the first instruction to 0x8013
+            chip8.Memory[0x0200] = 0x80;
+            chip8.Memory[0x0201] = 0x13;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x3, chip8.Registers[0]);
+        }
+
+        [Test]
+        public void Op8xy4()
+        {
+            chip8.Registers[0] = 0xFF;
+            chip8.Registers[1] = 0xFF;
+
+            // set the first instruction to 0x8014
+            chip8.Memory[0x0200] = 0x80;
+            chip8.Memory[0x0201] = 0x14;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xFE, chip8.Registers[0]);
+            Assert.AreEqual(0x1, chip8.Registers[0xF]);
+        }
+
+        [Test]
+        public void Op8xy5()
+        {
+            chip8.Registers[0] = 0xFF;
+            chip8.Registers[1] = 0x00;
+
+            // set the first instruction to 0x8015
+            chip8.Memory[0x0200] = 0x80;
+            chip8.Memory[0x0201] = 0x15;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xFF, chip8.Registers[0]);
+            Assert.AreEqual(0x1, chip8.Registers[0xF]);
+        }
+
+        [Test]
+        public void Op8xy6()
+        {
+            chip8.Registers[0] = 0xFF;
+
+            // set the first instruction to 0x8016
+            chip8.Memory[0x0200] = 0x80;
+            chip8.Memory[0x0201] = 0x16;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xFF / 2, chip8.Registers[0]);
+            Assert.AreEqual(0x1, chip8.Registers[0xF]);
+        }
+
+        [Test]
+        public void Op8xy7()
+        {
+            chip8.Registers[0] = 0x00;
+            chip8.Registers[1] = 0xFF;
+
+            // set the first instruction to 0x8017
+            chip8.Memory[0x0200] = 0x80;
+            chip8.Memory[0x0201] = 0x17;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xFF, chip8.Registers[0]);
+            Assert.AreEqual(0x1, chip8.Registers[0xF]);
+        }
+
+        [Test]
+        public void Op8xyE()
+        {
+            chip8.Registers[0] = 0xFF;
+
+            // set the first instruction to 0x801E
+            chip8.Memory[0x0200] = 0x80;
+            chip8.Memory[0x0201] = 0x1E;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xFE, chip8.Registers[0]);
+            Assert.AreEqual(0x1, chip8.Registers[0xF]);
+        }
+
+        [Test]
+        public void Op9xy0()
+        {
+            // set the first instruction to 0x9000
+            chip8.Memory[0x0200] = 0x90;
+            chip8.Memory[0x0201] = 0x00;
+
+            // set the second instrunction to 0x9010
+            chip8.Memory[0x0202] = 0x90;
+            chip8.Memory[0x0203] = 0x10;
+
+            chip8.Registers[1] = 0x1;
+
+            Assert.AreEqual(chip8.Registers[0], 0);
+            Assert.AreEqual(chip8.Registers[1], 1);
+
+            chip8.EmulateCycle();
+
+            // Vx should have been equal to Vy so incremented by 2 (4 really)
+            Assert.AreEqual(0x202, chip8.ProgramCounter);
+
+            chip8.EmulateCycle();
+
+            // Vx should not have been equal to Vy so incremented only by 1 (2 really)
+            Assert.AreEqual(0x206, chip8.ProgramCounter);
+        }
+
+        [Test]
+        public void OpAnnn()
+        {
+            // set the first instruction to 0xAFFF
+            chip8.Memory[0x0200] = 0xAF;
+            chip8.Memory[0x0201] = 0xFF;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xFFF, chip8.IndexRegister);
+        }
+
+        [Test]
+        public void OpBnnn()
+        {
+            // set the first instruction to 0xBFFF
+            chip8.Memory[0x0200] = 0xBF;
+            chip8.Memory[0x0201] = 0xFF;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xFFF, chip8.ProgramCounter);
+        }
+
+        [Test]
+        public void OpCxkk()
+        {
+            // set the first instruction to 0xC0FF
+            chip8.Memory[0x0200] = 0xC0;
+            chip8.Memory[0x0201] = 0xFF;
+
+            chip8.EmulateCycle();
+
+            Assert.True(0 < chip8.Registers[0] && 255 > chip8.Registers[0]);
+        }
+
+        // TODO make this actually check the graphics memory
+        [Test]
+        public void OpDxyn()
+        {
+            // set the first instruction to 0xD0FF
+            chip8.Memory[0x0200] = 0xD0;
+            chip8.Memory[0x0201] = 0x0F;
+
+            // set the second instruction to 0xD0FF
+            chip8.Memory[0x0202] = 0xD0;
+            chip8.Memory[0x0203] = 0x0F;
+
+            chip8.EmulateCycle();
+
+            // not going to check the actual graphics memory, just check the collision
+            Assert.AreEqual(0x0, chip8.Registers[0xF]);
+
+            chip8.EmulateCycle();
+
+            // not going to check the actual graphics memory, just check the collision
+            Assert.AreEqual(0x1, chip8.Registers[0xF]);
+        }
+
+        [Test]
+        public void OpEx9E()
+        {
+            // set the first instruction to 0xE09E
+            chip8.Memory[0x0200] = 0xE0;
+            chip8.Memory[0x0201] = 0x9E;
+
+            // set the second instruction to 0xE09E
+            chip8.Memory[0x0202] = 0xE0;
+            chip8.Memory[0x0203] = 0x9E;
+
+            chip8.Key[0] = 0;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x202,chip8.ProgramCounter);
+
+            chip8.Key[0] = 1;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x206, chip8.ProgramCounter);
+        }
+
+        [Test]
+        public void OpExA1()
+        {
+            // set the first instruction to 0xE09E
+            chip8.Memory[0x0200] = 0xE0;
+            chip8.Memory[0x0201] = 0xA1;
+
+            // set the second instruction to 0xE09E
+            chip8.Memory[0x0202] = 0xE0;
+            chip8.Memory[0x0203] = 0xA1;
+
+            chip8.Key[0] = 1;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x202, chip8.ProgramCounter);
+
+            chip8.Key[0] = 0;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x206, chip8.ProgramCounter);
+        }
+
+        [Test]
+        public void OpFx07()
+        {
+            // set the first instruction to 0xF007
+            chip8.Memory[0x0200] = 0xF0;
+            chip8.Memory[0x0201] = 0x07;
+
+            chip8.DelayTimer = 1;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x1, chip8.Registers[0]);
+        }
+
+        [Test]
+        public void OpFx0A()
+        {
+            // set the first instruction to 0xF00A
+            chip8.Memory[0x0200] = 0xF0;
+            chip8.Memory[0x0201] = 0x0A;
+
+            chip8.EmulateCycle();
+            chip8.EmulateCycle();
+            chip8.EmulateCycle();
+
+            chip8.Key[1] = 1;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x1, chip8.Registers[0]);
+        }
+
+        [Test]
+        public void OpFx15()
+        {
+            // set the first instruction to 0xF015
+            chip8.Memory[0x0200] = 0xF0;
+            chip8.Memory[0x0201] = 0x15;
+
+            chip8.Registers[0] = 0xF;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xF - 1, chip8.DelayTimer);
+        }
+
+        [Test]
+        public void OpFx18()
+        {
+            // set the first instruction to 0xF018
+            chip8.Memory[0x0200] = 0xF0;
+            chip8.Memory[0x0201] = 0x18;
+
+            chip8.Registers[0] = 0xF;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xF - 1, chip8.SoundTimer);
+        }
+
+        [Test]
+        public void OpFx1E()
+        {
+            // set the first instruction to 0xF01E
+            chip8.Memory[0x0200] = 0xF0;
+            chip8.Memory[0x0201] = 0x1E;
+
+            chip8.Registers[0] = 0xF;
+            chip8.IndexRegister = 0xF;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x1E, chip8.IndexRegister);
+        }
+
+        [Test]
+        public void OpFx29()
+        {
+            // set the first instruction to 0xF029
+            chip8.Memory[0x0200] = 0xF0;
+            chip8.Memory[0x0201] = 0x29;
+
+            chip8.Registers[0] = 0xF;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x4B, chip8.IndexRegister);
+        }
+
+        [Test]
+        public void OpFx33()
+        {
+            // set the first instruction to 0xF033
+            chip8.Memory[0x0200] = 0xF0;
+            chip8.Memory[0x0201] = 0x33;
+
+            chip8.Registers[0] = 0xFF;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0x2,chip8.Memory[chip8.IndexRegister]);
+            Assert.AreEqual(0x5, chip8.Memory[chip8.IndexRegister + 1]);
+            Assert.AreEqual(0x5, chip8.Memory[chip8.IndexRegister + 2]);
+        }
+
+        [Test]
+        public void OpFx55()
+        {
+            // set the first instruction to 0xF155
+            chip8.Memory[0x0200] = 0xF1;
+            chip8.Memory[0x0201] = 0x55;
+
+            chip8.IndexRegister = 0;
+
+            chip8.Registers[0] = 0xF;
+            chip8.Registers[1] = 0xF;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xF, chip8.Memory[0]);
+            Assert.AreEqual(0xF, chip8.Memory[1]);
+        }
+
+        [Test]
+        public void OpFx65()
+        {
+            // set the first instruction to 0xF155
+            chip8.Memory[0x0200] = 0xF1;
+            chip8.Memory[0x0201] = 0x65;
+
+            chip8.IndexRegister = 0;
+
+            chip8.Memory[0] = 0xF;
+            chip8.Memory[1] = 0xF;
+
+            chip8.EmulateCycle();
+
+            Assert.AreEqual(0xF, chip8.Registers[0]);
+            Assert.AreEqual(0xF, chip8.Registers[1]);
+        }
     }
 }

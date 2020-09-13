@@ -16,6 +16,10 @@ namespace HJM.Chip8.CPU
         /// Whether the screen needs to be drawn or not
         /// </summary>
         public bool DrawFlag { get; set; }
+        /// <summary>
+        /// Whether sound should be played or not 
+        /// </summary>
+        public bool SoundFlag { get; set; }
         public ushort OpCode { get; set; }
         /// <summary>
         /// 0x000-0x1FF - Chip 8 interpreter(contains font set in emu)
@@ -253,7 +257,7 @@ namespace HJM.Chip8.CPU
                         case 0x0007: // 8xy7 - SUBN Vx, Vy
                                      // Set Vx = Vy - Vx, set VF = NOT borrow.
                                      // If Vy > Vx, then VF is set to 1, otherwise 0. Then Vx is subtracted from Vy, and the results stored in Vx.
-                            if (Registers[(OpCode & 0x0F00) >> 8] > Registers[(OpCode & 0x00F0) >> 4])
+                            if (Registers[(OpCode & 0x00F0) >> 4] > Registers[(OpCode & 0x0F00) >> 8])
                             {
                                 Registers[0xF] = 1;
                             }
@@ -405,21 +409,21 @@ namespace HJM.Chip8.CPU
                         case 0x0015: // Fx15 - LD DT, Vx
                                      // Set delay timer = Vx.
                                      // DT is set equal to the value of Vx.
-                            DelayTimer = (byte)((OpCode & 0x0F00) >> 8);
+                            DelayTimer = Registers[(OpCode & 0x0F00) >> 8];
                             ProgramCounter += 2;
                             break;
 
                         case 0x0018: // Fx18 - LD ST, Vx
                                      // Set sound timer = Vx.
                                      // ST is set equal to the value of Vx.
-                            SoundTimer = (byte)((OpCode & 0x0F00) >> 8);
+                            SoundTimer = Registers[(OpCode & 0x0F00) >> 8];
                             ProgramCounter += 2;
                             break;
 
                         case 0x001E: // Fx1E - ADD I, Vx
                                      // Set I = I + Vx.
                                      // The values of I and Vx are added, and the results are stored in I.
-                            IndexRegister += (byte)((OpCode & 0x0F00) >> 8);
+                            IndexRegister += Registers[(OpCode & 0x0F00) >> 8];
                             ProgramCounter += 2;
                             break;
 
@@ -475,7 +479,7 @@ namespace HJM.Chip8.CPU
             {
                 // play sound
                 SoundTimer--;
-                throw new NotImplementedException("Sound not supported yet");
+                // sound not supported yet
             }
         }
 
