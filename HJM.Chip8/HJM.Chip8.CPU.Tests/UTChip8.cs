@@ -30,18 +30,17 @@ namespace HJM.Chip8.CPU.Tests
         [Test]
         public void Op00EE()
         {
-            // set the first instruction to 0x2202
-            chip8.Memory[0x0200] = 0x22;
-            chip8.Memory[0x0201] = 0x02;
-            // set the second instruction to 0x00EE
-            chip8.Memory[0x0202] = 0x00;
-            chip8.Memory[0x0203] = 0xEE;
+            // set the first instruction to 0x00EE
+            chip8.Memory[0x0200] = 0x00;
+            chip8.Memory[0x0201] = 0xEE;
 
-            // execute both instructions
-            chip8.EmulateCycle();
+            chip8.Stack[0] = 0x202;
+            chip8.StackPointer = 0x1;
+
+            // execute instruction
             chip8.EmulateCycle();
 
-            Assert.AreEqual(0x0200, chip8.ProgramCounter);
+            Assert.AreEqual(0x0204, chip8.ProgramCounter);
         }
 
         [Test]

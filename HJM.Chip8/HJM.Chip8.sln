@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HJM.Chip8.CPU", "HJM.Chip8.CPU\HJM.Chip8.CPU.csproj", "{52CAC392-14D9-44E6-9B61-1C499B15FE19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HJM.Chip8.CPU.Tests", "HJM.Chip8.CPU.Tests\HJM.Chip8.CPU.Tests.csproj", "{5130F8A6-B2CA-43DB-B8BA-2B0C21D1F98D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HJM.Chip8.CPU.Tests", "HJM.Chip8.CPU.Tests\HJM.Chip8.CPU.Tests.csproj", "{5130F8A6-B2CA-43DB-B8BA-2B0C21D1F98D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HJM.Chip8.MonoGameUI", "HJM.Chip8.MonoGameUI\HJM.Chip8.MonoGameUI.csproj", "{6A97DD18-F4D0-4D8A-AB38-804E08C14B4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5130F8A6-B2CA-43DB-B8BA-2B0C21D1F98D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5130F8A6-B2CA-43DB-B8BA-2B0C21D1F98D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5130F8A6-B2CA-43DB-B8BA-2B0C21D1F98D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A97DD18-F4D0-4D8A-AB38-804E08C14B4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A97DD18-F4D0-4D8A-AB38-804E08C14B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A97DD18-F4D0-4D8A-AB38-804E08C14B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A97DD18-F4D0-4D8A-AB38-804E08C14B4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

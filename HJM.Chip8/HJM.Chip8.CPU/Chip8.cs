@@ -81,10 +81,20 @@ namespace HJM.Chip8.CPU
         /// <summary>
         /// Loads the game with the specified name
         /// </summary>
-        /// <param name="Game">Which game to run</param>
+        /// <param name="Game">Path of the game to run</param>
         public void LoadGame(String Game)
         {
-            throw new NotImplementedException();
+            byte[] data = System.IO.File.ReadAllBytes(Game);
+
+            if(data.Length > (4096 - 512))
+            {
+                throw new Exception("ROM too large for memory");
+            }
+
+            for(int i = 0; i < data.Length; i++)
+            {
+                Memory[i + 512] = (byte)(data[i] & 0x00FF);
+            }
         }
 
         /// <summary>
@@ -106,7 +116,6 @@ namespace HJM.Chip8.CPU
                                      //  Clear the display.
                             Graphics = new byte[64 * 32];
                             DrawFlag = true;
-                            ProgramCounter += 2;
                             break;
 
                         case 0x00EE: // 00EE - RET
@@ -114,6 +123,7 @@ namespace HJM.Chip8.CPU
                                      // The interpreter sets the program counter to the address at the top of the stack, then subtracts 1 from the stack pointer.
                             StackPointer -= 1;
                             ProgramCounter = Stack[StackPointer];
+                            ProgramCounter += 2;
                             break;
 
                         default:
@@ -181,7 +191,7 @@ namespace HJM.Chip8.CPU
                 case 0x7000: // 7xkk - ADD Vx, byte
                              // Set Vx = Vx + kk.
                              // Adds the value kk to the value of register Vx, then stores the result in Vx.
-                    Registers[(OpCode & 0x0F00) >> 8] = (byte)(Registers[(OpCode & 0x0F00)] + (OpCode & 0x00FF));
+                    Registers[(OpCode & 0x0F00) >> 8] = (byte)(Registers[(OpCode & 0x0F00) >> 8] + (OpCode & 0x00FF));
                     ProgramCounter += 2;
                     break;
 
@@ -431,6 +441,7 @@ namespace HJM.Chip8.CPU
                                      // Set I = location of sprite for digit Vx.
                                      // The value of I is set to the location for the hexadecimal sprite corresponding to the value of Vx. See section 2.4, Display, for more information on the Chip-8 hexadecimal font.
                             IndexRegister = (ushort)(Registers[(OpCode & 0x0F00) >> 8] * 0x5);
+                            ProgramCounter += 2;
                             break;
 
                         case 0x0033: // Fx33 - LD B, Vx
