@@ -116,6 +116,7 @@ namespace HJM.Chip8.CPU
                                      //  Clear the display.
                             Graphics = new byte[64 * 32];
                             DrawFlag = true;
+                            ProgramCounter += 2;
                             break;
 
                         case 0x00EE: // 00EE - RET
@@ -378,7 +379,6 @@ namespace HJM.Chip8.CPU
                             break;
                         default:
                             throw new Exception("Unknown opCode: 0x" + Convert.ToString(OpCode, toBase: 16));
-                            break;
                     }
                     break;
 
@@ -495,14 +495,6 @@ namespace HJM.Chip8.CPU
             {
                 SoundFlag = false;
             }
-        }
-
-        /// <summary>
-        /// Sets the state of the keys
-        /// </summary>
-        public void SetKeys()
-        {
-            throw new NotImplementedException();
         }
     }
 }

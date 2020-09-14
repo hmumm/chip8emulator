@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace HJM.Chip8.MonoGameUI
 {
@@ -22,13 +23,14 @@ namespace HJM.Chip8.MonoGameUI
         {
             chip8 = new CPU.Chip8();
             chip8.Initalize();
-            chip8.LoadGame(@"");
+            chip8.LoadGame(@"C:\Users\Hayden\Downloads\myChip8-bin-src\myChip8-bin-src\invaders.c8");
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             whiteRectangle = new Texture2D(GraphicsDevice, 1, 1);
@@ -46,7 +48,30 @@ namespace HJM.Chip8.MonoGameUI
         {
             chip8.EmulateCycle();
 
-            // chip8.SetKeys();
+            // Poll for current keyboard state
+            KeyboardState state = Keyboard.GetState();
+
+            // If they hit esc, exit
+            if (state.IsKeyDown(Keys.Escape))
+                Exit();
+
+            // set all the keys
+            chip8.Key[0] = Convert.ToByte(state.IsKeyDown(Keys.X));
+            chip8.Key[1] = Convert.ToByte(state.IsKeyDown(Keys.D1));
+            chip8.Key[2] = Convert.ToByte(state.IsKeyDown(Keys.D2));
+            chip8.Key[3] = Convert.ToByte(state.IsKeyDown(Keys.D3));
+            chip8.Key[4] = Convert.ToByte(state.IsKeyDown(Keys.Q));
+            chip8.Key[5] = Convert.ToByte(state.IsKeyDown(Keys.W));
+            chip8.Key[6] = Convert.ToByte(state.IsKeyDown(Keys.E));
+            chip8.Key[7] = Convert.ToByte(state.IsKeyDown(Keys.A));
+            chip8.Key[8] = Convert.ToByte(state.IsKeyDown(Keys.S));
+            chip8.Key[9] = Convert.ToByte(state.IsKeyDown(Keys.D));
+            chip8.Key[0xA] = Convert.ToByte(state.IsKeyDown(Keys.Z));
+            chip8.Key[0xB] = Convert.ToByte(state.IsKeyDown(Keys.C));
+            chip8.Key[0xC] = Convert.ToByte(state.IsKeyDown(Keys.D4));
+            chip8.Key[0xD] = Convert.ToByte(state.IsKeyDown(Keys.R));
+            chip8.Key[0xE] = Convert.ToByte(state.IsKeyDown(Keys.F));
+            chip8.Key[0xF] = Convert.ToByte(state.IsKeyDown(Keys.V));
 
             base.Update(gameTime);
         }
@@ -55,8 +80,6 @@ namespace HJM.Chip8.MonoGameUI
         {
             if (chip8.DrawFlag)
             {
-                GraphicsDevice.Clear(Color.Black);
-
                 int screenWidth = this.GraphicsDevice.Viewport.Width;
                 int screenHeight = this.GraphicsDevice.Viewport.Height;
 
@@ -65,7 +88,9 @@ namespace HJM.Chip8.MonoGameUI
 
                 _spriteBatch.Begin();
 
-                for(int y = 0; y < 32; y++)
+                GraphicsDevice.Clear(Color.Black);
+
+                for (int y = 0; y < 32; y++)
                 {
                     for(int x = 0; x < 64; x++)
                     {
