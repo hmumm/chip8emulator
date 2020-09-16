@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 
 namespace HJM.Chip8.MonoGameUI
 {
@@ -11,6 +12,7 @@ namespace HJM.Chip8.MonoGameUI
         private SpriteBatch _spriteBatch;
         private Texture2D whiteRectangle;
         private CPU.Chip8 chip8;
+        private int ClockSpeed = 200;
 
         public Game1()
         {
@@ -24,6 +26,9 @@ namespace HJM.Chip8.MonoGameUI
             chip8 = new CPU.Chip8();
             chip8.Initalize();
             chip8.LoadGame(@"C:\Users\Hayden\Downloads\myChip8-bin-src\myChip8-bin-src\invaders.c8");
+
+            _graphics.SynchronizeWithVerticalRetrace = false;
+            this.IsFixedTimeStep = false;
 
             base.Initialize();
         }
@@ -46,34 +51,40 @@ namespace HJM.Chip8.MonoGameUI
 
         protected override void Update(GameTime gameTime)
         {
-            chip8.EmulateCycle();
+            // cycle the cpu as many times as it should have since the last update
+            double secondsPerCycle = 1d / ClockSpeed;
 
-            // Poll for current keyboard state
-            KeyboardState state = Keyboard.GetState();
+            for (double i = 0; i < gameTime.ElapsedGameTime.TotalSeconds; i += secondsPerCycle)
+            {
+                chip8.EmulateCycle();
 
-            // If they hit esc, exit
-            if (state.IsKeyDown(Keys.Escape))
-                Exit();
+                // Poll for current keyboard state
+                KeyboardState state = Keyboard.GetState();
 
-            // set all the keys
-            chip8.Key[0] = Convert.ToByte(state.IsKeyDown(Keys.X));
-            chip8.Key[1] = Convert.ToByte(state.IsKeyDown(Keys.D1));
-            chip8.Key[2] = Convert.ToByte(state.IsKeyDown(Keys.D2));
-            chip8.Key[3] = Convert.ToByte(state.IsKeyDown(Keys.D3));
-            chip8.Key[4] = Convert.ToByte(state.IsKeyDown(Keys.Q));
-            chip8.Key[5] = Convert.ToByte(state.IsKeyDown(Keys.W));
-            chip8.Key[6] = Convert.ToByte(state.IsKeyDown(Keys.E));
-            chip8.Key[7] = Convert.ToByte(state.IsKeyDown(Keys.A));
-            chip8.Key[8] = Convert.ToByte(state.IsKeyDown(Keys.S));
-            chip8.Key[9] = Convert.ToByte(state.IsKeyDown(Keys.D));
-            chip8.Key[0xA] = Convert.ToByte(state.IsKeyDown(Keys.Z));
-            chip8.Key[0xB] = Convert.ToByte(state.IsKeyDown(Keys.C));
-            chip8.Key[0xC] = Convert.ToByte(state.IsKeyDown(Keys.D4));
-            chip8.Key[0xD] = Convert.ToByte(state.IsKeyDown(Keys.R));
-            chip8.Key[0xE] = Convert.ToByte(state.IsKeyDown(Keys.F));
-            chip8.Key[0xF] = Convert.ToByte(state.IsKeyDown(Keys.V));
+                // If they hit esc, exit
+                if (state.IsKeyDown(Keys.Escape))
+                    Exit();
 
-            base.Update(gameTime);
+                // set all the keys
+                chip8.Key[0] = Convert.ToByte(state.IsKeyDown(Keys.X));
+                chip8.Key[1] = Convert.ToByte(state.IsKeyDown(Keys.D1));
+                chip8.Key[2] = Convert.ToByte(state.IsKeyDown(Keys.D2));
+                chip8.Key[3] = Convert.ToByte(state.IsKeyDown(Keys.D3));
+                chip8.Key[4] = Convert.ToByte(state.IsKeyDown(Keys.Q));
+                chip8.Key[5] = Convert.ToByte(state.IsKeyDown(Keys.W));
+                chip8.Key[6] = Convert.ToByte(state.IsKeyDown(Keys.E));
+                chip8.Key[7] = Convert.ToByte(state.IsKeyDown(Keys.A));
+                chip8.Key[8] = Convert.ToByte(state.IsKeyDown(Keys.S));
+                chip8.Key[9] = Convert.ToByte(state.IsKeyDown(Keys.D));
+                chip8.Key[0xA] = Convert.ToByte(state.IsKeyDown(Keys.Z));
+                chip8.Key[0xB] = Convert.ToByte(state.IsKeyDown(Keys.C));
+                chip8.Key[0xC] = Convert.ToByte(state.IsKeyDown(Keys.D4));
+                chip8.Key[0xD] = Convert.ToByte(state.IsKeyDown(Keys.R));
+                chip8.Key[0xE] = Convert.ToByte(state.IsKeyDown(Keys.F));
+                chip8.Key[0xF] = Convert.ToByte(state.IsKeyDown(Keys.V));
+
+                base.Update(gameTime);
+            }
         }
 
         protected override void Draw(GameTime gameTime)
