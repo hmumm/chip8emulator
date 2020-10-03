@@ -2,9 +2,10 @@ using NUnit.Framework;
 
 namespace HJM.Chip8.CPU.Tests
 {
-    public class Tests
+    public class UTChip8
     {
-        Chip8 chip8;
+        // Always initialized in Setup
+        private Chip8 chip8 = null!;
 
         [SetUp]
         public void Setup()
@@ -24,7 +25,7 @@ namespace HJM.Chip8.CPU.Tests
             chip8.EmulateCycle();
 
             // check that it got cleared
-            Assert.AreEqual(0,chip8.Graphics[0]);
+            Assert.AreEqual(0, chip8.Graphics[0]);
         }
 
         [Test]
@@ -413,7 +414,7 @@ namespace HJM.Chip8.CPU.Tests
 
             chip8.EmulateCycle();
 
-            Assert.AreEqual(0x202,chip8.ProgramCounter);
+            Assert.AreEqual(0x202, chip8.ProgramCounter);
 
             chip8.Key[0] = 1;
 
@@ -546,7 +547,7 @@ namespace HJM.Chip8.CPU.Tests
 
             chip8.EmulateCycle();
 
-            Assert.AreEqual(0x2,chip8.Memory[chip8.IndexRegister]);
+            Assert.AreEqual(0x2, chip8.Memory[chip8.IndexRegister]);
             Assert.AreEqual(0x5, chip8.Memory[chip8.IndexRegister + 1]);
             Assert.AreEqual(0x5, chip8.Memory[chip8.IndexRegister + 2]);
         }
