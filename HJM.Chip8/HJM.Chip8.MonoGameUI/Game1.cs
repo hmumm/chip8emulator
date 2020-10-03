@@ -9,51 +9,57 @@ namespace HJM.Chip8.MonoGameUI
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private Texture2D whiteRectangle;
-        private CPU.Chip8 chip8;
-        private int ClockSpeed = 500;
-        private Thread emulatorThread;
+        private const int ClockSpeed = 500;
+
+        private readonly GraphicsDeviceManager _graphics;
+        private readonly Thread _emulatorThread;
+        private readonly CPU.Chip8 _chip8;
+
+        private SpriteBatch? _spriteBatch;
+        private Texture2D? _whiteRectangle;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _emulatorThread = new Thread(RunCycles);
+            _chip8 = new CPU.Chip8();
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
-            chip8 = new CPU.Chip8();
-            chip8.Initalize();
-            chip8.LoadGame(@"C:\Users\Hayden\Downloads\myChip8-bin-src\myChip8-bin-src\pong2.c8");
+            _chip8.Initalize();
+            _chip8.LoadGame(@"C:\Users\adamg\Downloads\PONG2.c8");
 
             _graphics.SynchronizeWithVerticalRetrace = false;
-            this.IsFixedTimeStep = false;
+            IsFixedTimeStep = false;
 
-            emulatorThread = new Thread(RunCycles);
-            emulatorThread.Start();
+            _emulatorThread.Start();
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            whiteRectangle = new Texture2D(GraphicsDevice, 1, 1);
-            whiteRectangle.SetData(new[] { Color.White });
+            _whiteRectangle = new Texture2D(GraphicsDevice, width: 1, height: 1);
+            _whiteRectangle.SetData(new[] { Color.White });
         }
 
         protected override void UnloadContent()
         {
             base.UnloadContent();
-            whiteRectangle.Dispose();
-            _spriteBatch.Dispose();
 
-            emulatorThread.Abort();
+            if (_whiteRectangle != null)
+                _whiteRectangle.Dispose();
+
+            if (_spriteBatch != null)
+                _spriteBatch.Dispose();
+
+            _emulatorThread.Abort();
         }
 
         protected override void Update(GameTime gameTime)
@@ -66,56 +72,57 @@ namespace HJM.Chip8.MonoGameUI
                 Exit();
 
             // set all the keys
-            chip8.Key[0] = Convert.ToByte(state.IsKeyDown(Keys.X));
-            chip8.Key[1] = Convert.ToByte(state.IsKeyDown(Keys.D1));
-            chip8.Key[2] = Convert.ToByte(state.IsKeyDown(Keys.D2));
-            chip8.Key[3] = Convert.ToByte(state.IsKeyDown(Keys.D3));
-            chip8.Key[4] = Convert.ToByte(state.IsKeyDown(Keys.Q));
-            chip8.Key[5] = Convert.ToByte(state.IsKeyDown(Keys.W));
-            chip8.Key[6] = Convert.ToByte(state.IsKeyDown(Keys.E));
-            chip8.Key[7] = Convert.ToByte(state.IsKeyDown(Keys.A));
-            chip8.Key[8] = Convert.ToByte(state.IsKeyDown(Keys.S));
-            chip8.Key[9] = Convert.ToByte(state.IsKeyDown(Keys.D));
-            chip8.Key[0xA] = Convert.ToByte(state.IsKeyDown(Keys.Z));
-            chip8.Key[0xB] = Convert.ToByte(state.IsKeyDown(Keys.C));
-            chip8.Key[0xC] = Convert.ToByte(state.IsKeyDown(Keys.D4));
-            chip8.Key[0xD] = Convert.ToByte(state.IsKeyDown(Keys.R));
-            chip8.Key[0xE] = Convert.ToByte(state.IsKeyDown(Keys.F));
-            chip8.Key[0xF] = Convert.ToByte(state.IsKeyDown(Keys.V));
+            _chip8.Key[0] = Convert.ToByte(state.IsKeyDown(Keys.X));
+            _chip8.Key[1] = Convert.ToByte(state.IsKeyDown(Keys.D1));
+            _chip8.Key[2] = Convert.ToByte(state.IsKeyDown(Keys.D2));
+            _chip8.Key[3] = Convert.ToByte(state.IsKeyDown(Keys.D3));
+            _chip8.Key[4] = Convert.ToByte(state.IsKeyDown(Keys.Q));
+            _chip8.Key[5] = Convert.ToByte(state.IsKeyDown(Keys.W));
+            _chip8.Key[6] = Convert.ToByte(state.IsKeyDown(Keys.E));
+            _chip8.Key[7] = Convert.ToByte(state.IsKeyDown(Keys.A));
+            _chip8.Key[8] = Convert.ToByte(state.IsKeyDown(Keys.S));
+            _chip8.Key[9] = Convert.ToByte(state.IsKeyDown(Keys.D));
+            _chip8.Key[0xA] = Convert.ToByte(state.IsKeyDown(Keys.Z));
+            _chip8.Key[0xB] = Convert.ToByte(state.IsKeyDown(Keys.C));
+            _chip8.Key[0xC] = Convert.ToByte(state.IsKeyDown(Keys.D4));
+            _chip8.Key[0xD] = Convert.ToByte(state.IsKeyDown(Keys.R));
+            _chip8.Key[0xE] = Convert.ToByte(state.IsKeyDown(Keys.F));
+            _chip8.Key[0xF] = Convert.ToByte(state.IsKeyDown(Keys.V));
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            if (chip8.DrawFlag)
+            if (_chip8.DrawFlag)
             {
-                int screenWidth = this.GraphicsDevice.Viewport.Width;
-                int screenHeight = this.GraphicsDevice.Viewport.Height;
+                int screenWidth = GraphicsDevice.Viewport.Width;
+                int screenHeight = GraphicsDevice.Viewport.Height;
 
                 int pixelWidth = screenWidth / 64;
                 int pixelHeight = screenHeight / 32;
 
-                _spriteBatch.Begin();
+                // LoadContent has been called at this point
+                _spriteBatch!.Begin();
 
                 GraphicsDevice.Clear(Color.Black);
 
                 for (int y = 0; y < 32; y++)
                 {
-                    for(int x = 0; x < 64; x++)
+                    for (int x = 0; x < 64; x++)
                     {
-                        if(chip8.Graphics[(y*64) + x] == 1)
+                        if (_chip8.Graphics[(y * 64) + x] == 1)
                         {
-                            _spriteBatch.Draw(whiteRectangle, new Rectangle(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight), Color.White);
+                            _spriteBatch.Draw(_whiteRectangle, new Rectangle(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight), Color.White);
                         }
                     }
                 }
 
                 _spriteBatch.End();
-                chip8.DrawFlag = false;
+                _chip8.DrawFlag = false;
             }
 
-            if(chip8.SoundFlag)
+            if (_chip8.SoundFlag)
             {
                 // play sound
             }
@@ -132,9 +139,9 @@ namespace HJM.Chip8.MonoGameUI
 
             while (true)
             {
-                chip8.EmulateCycle();
+                _chip8.EmulateCycle();
 
-                while(s.ElapsedMilliseconds < millesecondsPerCycle)
+                while (s.ElapsedMilliseconds < millesecondsPerCycle)
                 {
                     Thread.Sleep(1);
                 }

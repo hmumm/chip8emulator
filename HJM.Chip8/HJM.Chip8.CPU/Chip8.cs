@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace HJM.Chip8.CPU
 {
@@ -81,17 +77,17 @@ namespace HJM.Chip8.CPU
         /// <summary>
         /// Loads the game with the specified name
         /// </summary>
-        /// <param name="Game">Path of the game to run</param>
-        public void LoadGame(String Game)
+        /// <param name="pathToGame">Path of the game to run</param>
+        public void LoadGame(string pathToGame)
         {
-            byte[] data = System.IO.File.ReadAllBytes(Game);
+            byte[] data = System.IO.File.ReadAllBytes(pathToGame);
 
-            if(data.Length > (4096 - 512))
+            if (data.Length > (4096 - 512))
             {
-                throw new Exception("ROM too large for memory");
+                throw new ArgumentException("Game to load is too large for memory.", nameof(pathToGame));
             }
 
-            for(int i = 0; i < data.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
                 Memory[i + 512] = (byte)(data[i] & 0x00FF);
             }
@@ -128,7 +124,7 @@ namespace HJM.Chip8.CPU
                             break;
 
                         default:
-                            throw new Exception("Unknown opCode: 0x" + Convert.ToString(OpCode, toBase: 16));
+                            throw new InvalidOperationException($"Unknown opCode: 0x{Convert.ToString(OpCode, toBase: 16)}");
                     }
                     break;
 
@@ -151,7 +147,8 @@ namespace HJM.Chip8.CPU
                     if (Registers[(ushort)((OpCode & 0x0F00) >> 8)] == (ushort)(OpCode & 0x00FF))
                     {
                         ProgramCounter += 4;
-                    } else
+                    }
+                    else
                     {
                         ProgramCounter += 2;
                     }
@@ -248,7 +245,8 @@ namespace HJM.Chip8.CPU
                             if (Registers[(OpCode & 0x0F00) >> 8] > Registers[(OpCode & 0x00F0) >> 4])
                             {
                                 Registers[0xF] = 1;
-                            } else
+                            }
+                            else
                             {
                                 Registers[0xF] = 0;
                             }
@@ -290,7 +288,7 @@ namespace HJM.Chip8.CPU
                             break;
 
                         default:
-                            throw new Exception("Unknown opCode: 0x" + Convert.ToString(OpCode, toBase: 16));
+                            throw new InvalidOperationException($"Unknown opCode: 0x{Convert.ToString(OpCode, toBase: 16)}");
                     }
                     break;
 
@@ -300,7 +298,8 @@ namespace HJM.Chip8.CPU
                     if (Registers[(OpCode & 0x0F00) >> 8] != Registers[(OpCode & 0x00F0) >> 4])
                     {
                         ProgramCounter += 4;
-                    } else
+                    }
+                    else
                     {
                         ProgramCounter += 2;
                     }
@@ -358,7 +357,7 @@ namespace HJM.Chip8.CPU
                     break;
 
                 case 0xE000:
-                    switch(OpCode & 0x00FF)
+                    switch (OpCode & 0x00FF)
                     {
                         case 0x009E: // Ex9E - SKP Vx
                                      // Skip next instruction if key with the value of Vx is pressed.
@@ -378,7 +377,7 @@ namespace HJM.Chip8.CPU
                                 ProgramCounter += 2;
                             break;
                         default:
-                            throw new Exception("Unknown opCode: 0x" + Convert.ToString(OpCode, toBase: 16));
+                            throw new InvalidOperationException($"Unknown opCode: 0x{Convert.ToString(OpCode, toBase: 16)}");
                     }
                     break;
 
@@ -399,16 +398,16 @@ namespace HJM.Chip8.CPU
                             // loop through the keys pressed, if one is pressed capture the first one
                             // probably not the best way to do this, can't think of a better way right now
                             int keyValue = -1;
-                            for(int i = 0; i < 16; i++)
+                            for (int i = 0; i < 16; i++)
                             {
-                                if(Key[i] > 0)
+                                if (Key[i] > 0)
                                 {
                                     keyValue = i;
                                     break;
                                 }
                             }
 
-                            if(keyValue > -1)
+                            if (keyValue > -1)
                             {
                                 Registers[(OpCode & 0x0F00) >> 8] = (byte)keyValue;
                                 ProgramCounter += 2;
@@ -474,12 +473,12 @@ namespace HJM.Chip8.CPU
                             break;
 
                         default:
-                            throw new Exception("Unknown opCode: 0x" + Convert.ToString(OpCode, toBase: 16));
+                            throw new InvalidOperationException($"Unknown opCode: 0x{Convert.ToString(OpCode, toBase: 16)}");
                     }
                     break;
 
                 default:
-                    throw new Exception("Unknown opCode: 0x" + Convert.ToString(OpCode,toBase: 16));
+                    throw new InvalidOperationException($"Unknown opCode: 0x{Convert.ToString(OpCode, toBase: 16)}");
             }
 
             // Update timers
@@ -491,7 +490,8 @@ namespace HJM.Chip8.CPU
                 // play sound
                 SoundTimer--;
                 SoundFlag = true;
-            } else
+            }
+            else
             {
                 SoundFlag = false;
             }

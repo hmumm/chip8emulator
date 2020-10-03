@@ -7,8 +7,8 @@ namespace HJM.Chip8.MonoGameUI
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
-                game.Run();
+            using var game = new Chip8Game();
+            game.Run();
         }
     }
 }
