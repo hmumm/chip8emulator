@@ -1,4 +1,5 @@
 ﻿using System;
+using Serilog;
 
 namespace HJM.Chip8.CPU
 {
@@ -80,7 +81,11 @@ namespace HJM.Chip8.CPU
         /// <param name="pathToGame">Path of the game to run</param>
         public void LoadGame(string pathToGame)
         {
+            Log.Information($"Loading game from \"{pathToGame}\".");
+
             byte[] data = System.IO.File.ReadAllBytes(pathToGame);
+
+            Log.Information($"Read {data.Length} bytes.");
 
             if (data.Length > (4096 - 512))
             {
