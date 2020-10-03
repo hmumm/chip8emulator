@@ -22,8 +22,7 @@ jobs:
     - name: Test
       run: dotnet test HJM.Chip8/HJM.Chip8.sln --no-restore --verbosity normal
     - name: Create Release
-        id: create_release
-        - uses: "marvinpinto/action-automatic-releases@latest"
+    - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
