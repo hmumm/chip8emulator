@@ -1,4 +1,5 @@
 ﻿using System;
+using Serilog;
 
 namespace HJM.Chip8.MonoGameUI
 {
@@ -7,8 +8,17 @@ namespace HJM.Chip8.MonoGameUI
         [STAThread]
         static void Main()
         {
-            using var game = new Chip8Game();
+            InitializeLogging();
+
+            using var game = new Game1();
             game.Run();
+        }
+
+        private static void InitializeLogging()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
         }
     }
 }
