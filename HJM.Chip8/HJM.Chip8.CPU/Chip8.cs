@@ -107,6 +107,8 @@ namespace HJM.Chip8.CPU
             // Convert 2 1 byte memory addresses to 1 2 byte op code
             OpCode = (ushort)(Memory[ProgramCounter] << 8 | Memory[ProgramCounter + 1]);
 
+            Log.Debug($"Executing OpCode {OpCode}");
+
             // Decode Opcode
             switch (OpCode & 0xF000)
             {
