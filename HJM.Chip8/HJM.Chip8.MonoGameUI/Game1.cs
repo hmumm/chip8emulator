@@ -18,6 +18,7 @@ namespace HJM.Chip8.MonoGameUI
 
         private SpriteBatch? _spriteBatch;
         private Texture2D? _whiteRectangle;
+        private bool _threadStopped = false;
 
         public Game1()
         {
@@ -32,7 +33,7 @@ namespace HJM.Chip8.MonoGameUI
         protected override void Initialize()
         {
             _chip8.Initalize();
-            _chip8.LoadGame(@"C:\Users\adamg\Downloads\PONG2.c8");
+            _chip8.LoadGame(@"C:\Users\Hayden\Downloads\myChip8-bin-src\myChip8-bin-src\PONG2.c8");
 
             _graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
@@ -61,7 +62,8 @@ namespace HJM.Chip8.MonoGameUI
             if (_spriteBatch != null)
                 _spriteBatch.Dispose();
 
-            _emulatorThread.Abort();
+            _threadStopped = true;
+            Log.Information("Emulator thread stopped.");
         }
 
         protected override void Update(GameTime gameTime)
@@ -139,7 +141,7 @@ namespace HJM.Chip8.MonoGameUI
             Stopwatch s = new Stopwatch();
             s.Start();
 
-            while (true)
+            while (!_threadStopped)
             {
                 _chip8.EmulateCycle();
 
