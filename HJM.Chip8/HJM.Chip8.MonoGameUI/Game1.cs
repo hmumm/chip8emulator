@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 using System.Threading;
+using Serilog;
 
 namespace HJM.Chip8.MonoGameUI
 {
@@ -37,6 +38,7 @@ namespace HJM.Chip8.MonoGameUI
             IsFixedTimeStep = false;
 
             _emulatorThread.Start();
+            Log.Information("Emulator thread started.");
 
             base.Initialize();
         }
