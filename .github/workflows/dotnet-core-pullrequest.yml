@@ -1,0 +1,23 @@
+name: .NET Core pullrequest
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: dotnet restore HJM.Chip8/HJM.Chip8.sln
+    - name: Build
+      run: dotnet build HJM.Chip8/HJM.Chip8.sln --configuration Release --no-restore
+    - name: Test
+      run: dotnet test HJM.Chip8/HJM.Chip8.sln --no-restore --verbosity normal
