@@ -19,6 +19,8 @@ namespace HJM.Chip8.MonoGameUI
         private SpriteBatch? _spriteBatch;
         private Texture2D? _whiteRectangle;
         private bool _threadStopped = false;
+        private byte[] _displayBuffer = new byte[4096];
+        private byte _bufferedFrameMask = 0b_1111_0000;
 
         public Game1()
         {
@@ -98,33 +100,32 @@ namespace HJM.Chip8.MonoGameUI
 
         protected override void Draw(GameTime gameTime)
         {
-            if (_chip8.DrawFlag)
+            int screenWidth = GraphicsDevice.Viewport.Width;
+            int screenHeight = GraphicsDevice.Viewport.Height;
+
+            int pixelWidth = screenWidth / 64;
+            int pixelHeight = screenHeight / 32;
+
+            // LoadContent has been called at this point
+            _spriteBatch!.Begin();
+
+            GraphicsDevice.Clear(Color.Black);
+
+            for (int y = 0; y < 32; y++)
             {
-                int screenWidth = GraphicsDevice.Viewport.Width;
-                int screenHeight = GraphicsDevice.Viewport.Height;
-
-                int pixelWidth = screenWidth / 64;
-                int pixelHeight = screenHeight / 32;
-
-                // LoadContent has been called at this point
-                _spriteBatch!.Begin();
-
-                GraphicsDevice.Clear(Color.Black);
-
-                for (int y = 0; y < 32; y++)
+                for (int x = 0; x < 64; x++)
                 {
-                    for (int x = 0; x < 64; x++)
+                    int index = (y * 64) + x;
+                    if (_chip8.Graphics[index] == 1 || _displayBuffer[index] > 0)
                     {
-                        if (_chip8.Graphics[(y * 64) + x] == 1)
-                        {
-                            _spriteBatch.Draw(_whiteRectangle, new Rectangle(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight), Color.White);
-                        }
+                        _spriteBatch.Draw(_whiteRectangle, new Rectangle(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight), Color.White);
+                        _displayBuffer[index] |= (byte)((_chip8.Graphics[index] << 7) & 0x80);   //If _chip8.Graphics[index] == 1, set the first bit in displayBuffer[index] to 1
                     }
+                    _displayBuffer[index] = (byte)((_displayBuffer[index] >> 1) & _bufferedFrameMask);  //Shift buffered frames right, apply mask to cap amount of buffered frames
                 }
-
-                _spriteBatch.End();
-                _chip8.DrawFlag = false;
             }
+
+            _spriteBatch.End();
 
             if (_chip8.SoundFlag)
             {
