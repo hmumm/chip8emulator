@@ -9,7 +9,7 @@ namespace HJM.Chip8.CPU
     /// </summary>
     public class Chip8
     {
-        public CPUState State { get; set; }
+        public CPUState State { get; set; } = new CPUState();
 
         private readonly byte[] FONT_SET =
         {
