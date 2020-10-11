@@ -78,22 +78,22 @@ namespace HJM.Chip8.MonoGameUI
                 Exit();
 
             // set all the keys
-            _chip8.Key[0] = Convert.ToByte(state.IsKeyDown(Keys.X));
-            _chip8.Key[1] = Convert.ToByte(state.IsKeyDown(Keys.D1));
-            _chip8.Key[2] = Convert.ToByte(state.IsKeyDown(Keys.D2));
-            _chip8.Key[3] = Convert.ToByte(state.IsKeyDown(Keys.D3));
-            _chip8.Key[4] = Convert.ToByte(state.IsKeyDown(Keys.Q));
-            _chip8.Key[5] = Convert.ToByte(state.IsKeyDown(Keys.W));
-            _chip8.Key[6] = Convert.ToByte(state.IsKeyDown(Keys.E));
-            _chip8.Key[7] = Convert.ToByte(state.IsKeyDown(Keys.A));
-            _chip8.Key[8] = Convert.ToByte(state.IsKeyDown(Keys.S));
-            _chip8.Key[9] = Convert.ToByte(state.IsKeyDown(Keys.D));
-            _chip8.Key[0xA] = Convert.ToByte(state.IsKeyDown(Keys.Z));
-            _chip8.Key[0xB] = Convert.ToByte(state.IsKeyDown(Keys.C));
-            _chip8.Key[0xC] = Convert.ToByte(state.IsKeyDown(Keys.D4));
-            _chip8.Key[0xD] = Convert.ToByte(state.IsKeyDown(Keys.R));
-            _chip8.Key[0xE] = Convert.ToByte(state.IsKeyDown(Keys.F));
-            _chip8.Key[0xF] = Convert.ToByte(state.IsKeyDown(Keys.V));
+            _chip8.State.Key[0] = Convert.ToByte(state.IsKeyDown(Keys.X));
+            _chip8.State.Key[1] = Convert.ToByte(state.IsKeyDown(Keys.D1));
+            _chip8.State.Key[2] = Convert.ToByte(state.IsKeyDown(Keys.D2));
+            _chip8.State.Key[3] = Convert.ToByte(state.IsKeyDown(Keys.D3));
+            _chip8.State.Key[4] = Convert.ToByte(state.IsKeyDown(Keys.Q));
+            _chip8.State.Key[5] = Convert.ToByte(state.IsKeyDown(Keys.W));
+            _chip8.State.Key[6] = Convert.ToByte(state.IsKeyDown(Keys.E));
+            _chip8.State.Key[7] = Convert.ToByte(state.IsKeyDown(Keys.A));
+            _chip8.State.Key[8] = Convert.ToByte(state.IsKeyDown(Keys.S));
+            _chip8.State.Key[9] = Convert.ToByte(state.IsKeyDown(Keys.D));
+            _chip8.State.Key[0xA] = Convert.ToByte(state.IsKeyDown(Keys.Z));
+            _chip8.State.Key[0xB] = Convert.ToByte(state.IsKeyDown(Keys.C));
+            _chip8.State.Key[0xC] = Convert.ToByte(state.IsKeyDown(Keys.D4));
+            _chip8.State.Key[0xD] = Convert.ToByte(state.IsKeyDown(Keys.R));
+            _chip8.State.Key[0xE] = Convert.ToByte(state.IsKeyDown(Keys.F));
+            _chip8.State.Key[0xF] = Convert.ToByte(state.IsKeyDown(Keys.V));
 
             base.Update(gameTime);
         }
@@ -116,10 +116,10 @@ namespace HJM.Chip8.MonoGameUI
                 for (int x = 0; x < 64; x++)
                 {
                     int index = (y * 64) + x;
-                    if (_chip8.Graphics[index] == 1 || _displayBuffer[index] > 0)
+                    if (_chip8.State.Graphics[index] == 1 || _displayBuffer[index] > 0)
                     {
                         _spriteBatch.Draw(_whiteRectangle, new Rectangle(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight), Color.White);
-                        _displayBuffer[index] |= (byte)((_chip8.Graphics[index] << 7) & 0x80);   //If _chip8.Graphics[index] == 1, set the first bit in displayBuffer[index] to 1
+                        _displayBuffer[index] |= (byte)((_chip8.State.Graphics[index] << 7) & 0x80);   //If _chip8.Graphics[index] == 1, set the first bit in displayBuffer[index] to 1
                     }
                     _displayBuffer[index] = (byte)((_displayBuffer[index] >> 1) & _bufferedFrameMask);  //Shift buffered frames right, apply mask to cap amount of buffered frames
                 }
@@ -127,7 +127,7 @@ namespace HJM.Chip8.MonoGameUI
 
             _spriteBatch.End();
 
-            if (_chip8.SoundFlag)
+            if (_chip8.State.SoundFlag)
             {
                 // play sound
             }
