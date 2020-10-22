@@ -6,8 +6,8 @@ namespace HJM.Chip8.CPU.Changes
 {
     public class Change<T>
     {
-        string? Description { get; set; }
-        T OldValue { get; set; }
-        T NewValue { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public T OldValue { get; set; }
+        public T NewValue { get; set; }
     }
 }

@@ -6,6 +6,6 @@ namespace HJM.Chip8.CPU.Changes
 {
     public class AddressChange<T> : Change<T>
     {
-        T AddressChanged { get; set; }
+        public T AddressChanged { get; set; }
     }
 }

@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HJM.Chip8.CPU.Exceptions
+{
+    public class InvalidOpCodeException : InvalidOperationException
+    {
+        public InvalidOpCodeException(ushort opCode) : base(OpCodeToMessage(opCode))
+        {
+
+        }
+
+        private static string OpCodeToMessage(ushort opCode)
+        {
+            return $"Unknown opCode: 0x{Convert.ToString(opCode, toBase: 16)}";
+        }
+    }
+}
