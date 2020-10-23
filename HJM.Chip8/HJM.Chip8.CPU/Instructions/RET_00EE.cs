@@ -18,16 +18,19 @@ namespace HJM.Chip8.CPU.Instructions
 
             StackChange stackChange = new StackChange();
 
-            Change<ushort> stackPointerChange = new Change<ushort>();
-            stackPointerChange.OldValue = state.StackPointer;
-            stackPointerChange.NewValue = (ushort)(state.StackPointer - 1);
+            Change<ushort> stackPointerChange = new Change<ushort>
+            {
+                OldValue = state.StackPointer,
+                NewValue = (ushort)(state.StackPointer - 1)
+            };
+
+            Change<ushort> programCounterChange = new Change<ushort>
+            {
+                OldValue = state.ProgramCounter,
+                NewValue = (ushort)(state.Stack[state.StackPointer - 1] + 2)
+            };
 
             stackChange.StackPointerChange = stackPointerChange;
-
-            Change<ushort> programCounterChange = new Change<ushort>();
-            programCounterChange.OldValue = state.ProgramCounter;
-            programCounterChange.NewValue = (ushort)(state.Stack[state.StackPointer - 1] + 2);
-
             stateChange.StackChange = stackChange;
             stateChange.ProgramCounterChange = programCounterChange;
 

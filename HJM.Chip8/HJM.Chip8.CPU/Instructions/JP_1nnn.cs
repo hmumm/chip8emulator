@@ -16,9 +16,13 @@ namespace HJM.Chip8.CPU.Instructions
         {
             CPUStateChange stateChange = new CPUStateChange();
 
-            Change<ushort> programCounterChange = new Change<ushort>();
-            programCounterChange.OldValue = state.ProgramCounter;
-            programCounterChange.NewValue = (ushort)(state.OpCode & 0x0FFF);
+            Change<ushort> programCounterChange = new Change<ushort>
+            {
+                OldValue = state.ProgramCounter,
+                NewValue = (ushort)(state.OpCode & 0x0FFF)
+            };
+
+            stateChange.ProgramCounterChange = programCounterChange;
 
             return stateChange;
         }
