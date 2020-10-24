@@ -4,6 +4,9 @@ using System.Text;
 
 namespace HJM.Chip8.CPU.Changes
 {
+    /// <summary>
+    /// Represents the changes in a CPUState
+    /// </summary>
     public class CPUStateChange
     {
         public List<AddressChange<byte>> RegisterChanges { get; } = new List<AddressChange<byte>>();
@@ -14,6 +17,10 @@ namespace HJM.Chip8.CPU.Changes
         public StackChange? StackChange { get; set; }
         public Change<bool>? SoundFlagChange { get; set; }
 
+        /// <summary>
+        /// Increments the program counter
+        /// </summary>
+        /// <param name="oldValue">Previous value of the program counter</param>
         public void IncrementProgramCounter(ushort oldValue)
         {
             Change<ushort> programCounterChange = new Change<ushort>();

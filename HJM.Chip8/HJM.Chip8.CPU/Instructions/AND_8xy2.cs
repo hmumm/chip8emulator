@@ -6,28 +6,28 @@ using System.Text;
 namespace HJM.Chip8.CPU.Instructions
 {
     /// <summary>
-    /// 7xkk - ADD Vx, byte
-    /// Set Vx = Vx + kk.
-    /// Adds the value kk to the value of register Vx, then stores the result in Vx.
+    /// 8xy2 - AND Vx, Vy
+    /// Set Vx = Vx AND Vy.
+    /// Performs a bitwise AND on the values of Vx and Vy, then stores the result in Vx. 
+    /// A bitwise AND compares the corrseponding bits from two values, and if both bits are 1, then the same bit in the result is also 1. Otherwise, it is 0. 
     /// </summary>
-    public class ADD_7xkk : Instruction
+    public class AND_8xy2 : Instruction
     {
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();
 
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
-            byte kk = (byte)(state.Registers[x] + state.OpCode & 0x00FF);
+            byte y = (byte)((state.OpCode & 0x00F0) >> 4);
 
             AddressChange<byte> registerChange = new AddressChange<byte>()
             {
                 AddressChanged = x,
                 OldValue = state.Registers[x],
-                NewValue = kk
+                NewValue = (byte)(state.Registers[x] & state.Registers[y])
             };
 
             stateChange.RegisterChanges.Add(registerChange);
-
             stateChange.IncrementProgramCounter(state.ProgramCounter);
 
             return stateChange;

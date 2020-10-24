@@ -5,6 +5,11 @@ using System.Text;
 
 namespace HJM.Chip8.CPU.Instructions
 {
+    /// <summary>
+    /// 5xy0 - SE Vx, Vy
+    /// Skip next instruction if Vx = Vy.
+    /// The interpreter compares register Vx to register Vy, and if they are equal, increments the program counter by 2.
+    /// </summary>
     public class SE_5xy0 : Instruction
     {
         public override CPUStateChange Execute(in CPUState state)

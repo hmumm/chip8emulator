@@ -6,6 +6,9 @@ using System.Text;
 
 namespace HJM.Chip8.CPU.Instructions
 {
+    /// <summary>
+    /// Call the correct instruction that starts with 0 in hex
+    /// </summary>
     public class _0000 : Instruction
     {
         private Dictionary<int, Instruction> Instructions = new Dictionary<int, Instruction>();
