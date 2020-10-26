@@ -6,25 +6,23 @@ using System.Text;
 namespace HJM.Chip8.CPU.Instructions
 {
     /// <summary>
-    /// 8xy0 - LD Vx, Vy
-    /// Set Vx = Vy.
-    /// Stores the value of register Vy in register Vx.
+    /// Fx15 - LD DT, Vx
+    /// Set delay timer = Vx.
+    /// DT is set equal to the value of Vx.
     /// </summary>
-    public class LD_8xy0 : Instruction
+    public class LD_Fx15 : Instruction
     {
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();
 
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
-            byte y = (byte)((state.OpCode & 0x00F0) >> 4);
 
-            stateChange.RegisterChanges.Add(new AddressChange<byte>()
+            stateChange.DelayTimerChange = new Change<byte>()
             {
-                AddressChanged = x,
-                OldValue = state.Registers[x],
-                NewValue = (byte)(state.Registers[y])
-            });
+                OldValue = state.DelayTimer,
+                NewValue = state.Registers[x]
+            };
 
             stateChange.IncrementProgramCounter(state.ProgramCounter);
 

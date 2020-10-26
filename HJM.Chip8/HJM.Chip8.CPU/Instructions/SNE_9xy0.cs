@@ -6,11 +6,11 @@ using System.Text;
 namespace HJM.Chip8.CPU.Instructions
 {
     /// <summary>
-    /// 8xy0 - LD Vx, Vy
-    /// Set Vx = Vy.
-    /// Stores the value of register Vy in register Vx.
+    /// 9xy0 - SNE Vx, Vy
+    /// Skip next instruction if Vx != Vy.
+    /// The values of Vx and Vy are compared, and if they are not equal, the program counter is increased by 2.
     /// </summary>
-    public class LD_8xy0 : Instruction
+    public class SNE_9xy0 : Instruction
     {
         public override CPUStateChange Execute(in CPUState state)
         {
@@ -19,14 +19,14 @@ namespace HJM.Chip8.CPU.Instructions
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
             byte y = (byte)((state.OpCode & 0x00F0) >> 4);
 
-            stateChange.RegisterChanges.Add(new AddressChange<byte>()
+            if (state.Registers[x] != state.Registers[y])
             {
-                AddressChanged = x,
-                OldValue = state.Registers[x],
-                NewValue = (byte)(state.Registers[y])
-            });
-
-            stateChange.IncrementProgramCounter(state.ProgramCounter);
+                stateChange.SkipNextInstruction(state.ProgramCounter);
+            }
+            else
+            {
+                stateChange.IncrementProgramCounter(state.ProgramCounter);
+            }
 
             return stateChange;
         }

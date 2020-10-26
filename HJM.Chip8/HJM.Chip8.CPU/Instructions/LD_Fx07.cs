@@ -6,11 +6,11 @@ using System.Text;
 namespace HJM.Chip8.CPU.Instructions
 {
     /// <summary>
-    /// 8xy6 - SHR Vx {, Vy}
-    /// Set Vx = Vx SHR 1.
-    ///  If the least-significant bit of Vx is 1, then VF is set to 1, otherwise 0. Then Vx is divided by 2.
+    /// Fx07 - LD Vx, DT
+    /// Set Vx = delay timer value.
+    /// The value of DT is placed into Vx.
     /// </summary>
-    public class SHR_8xy6 : Instruction
+    public class LD_Fx07 : Instruction
     {
         public override CPUStateChange Execute(in CPUState state)
         {
@@ -22,17 +22,9 @@ namespace HJM.Chip8.CPU.Instructions
             {
                 AddressChanged = x,
                 OldValue = state.Registers[x],
-                NewValue = (byte)(state.Registers[x] / 2)
+                NewValue = state.DelayTimer
             });
 
-            AddressChange<byte> carryChange = new AddressChange<byte>()
-            {
-                AddressChanged = 0xf,
-                OldValue = state.Registers[0xf],
-                NewValue = (byte)(state.Registers[x] & 0x1)
-            };
-
-            stateChange.RegisterChanges.Add(carryChange);
             stateChange.IncrementProgramCounter(state.ProgramCounter);
 
             return stateChange;

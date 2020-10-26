@@ -6,25 +6,19 @@ using System.Text;
 namespace HJM.Chip8.CPU.Instructions
 {
     /// <summary>
-    /// 3xkk - SE Vx, byte
-    /// Skip next instruction if Vx = kk.
-    /// The interpreter compares register Vx to kk, and if they are equal, increments the program counter by 2.
+    /// ExA1 - SKNP Vx
+    /// Skip next instruction if key with the value of Vx is not pressed.
+    /// Checks the keyboard, and if the key corresponding to the value of Vx is currently in the up position, PC is increased by 2.
     /// </summary>
-    public class SE_3xkk : Instruction
+    public class SKNP_ExA1 : Instruction
     {
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();
 
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
-            byte kk = (byte)(state.OpCode & 0x00FF);
 
-            stateChange.ProgramCounterChange = new Change<ushort>
-            {
-                OldValue = state.ProgramCounter
-            };
-
-            if (state.Registers[x] == kk)
+            if (state.Key[state.Registers[x]] == 0)
             {
                 stateChange.SkipNextInstruction(state.ProgramCounter);
             }

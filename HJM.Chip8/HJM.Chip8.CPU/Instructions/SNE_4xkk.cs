@@ -19,21 +19,14 @@ namespace HJM.Chip8.CPU.Instructions
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
             byte kk = (byte)(state.OpCode & 0x00FF);
 
-            Change<ushort> programCounterChange = new Change<ushort>()
-            {
-                OldValue = state.ProgramCounter
-            };
-
             if (state.Registers[x] != kk)
             {
-                programCounterChange.NewValue = (ushort)(state.ProgramCounter + 4);
+                stateChange.SkipNextInstruction(state.ProgramCounter);
             }
             else
             {
-                programCounterChange.NewValue = (ushort)(state.ProgramCounter + 2);
+                stateChange.IncrementProgramCounter(state.ProgramCounter);
             }
-
-            stateChange.ProgramCounterChange = programCounterChange;
 
             return stateChange;
         }

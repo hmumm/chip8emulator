@@ -18,14 +18,12 @@ namespace HJM.Chip8.CPU.Instructions
 
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
 
-            AddressChange<byte> registerChange = new AddressChange<byte>()
+            stateChange.RegisterChanges.Add(new AddressChange<byte>()
             {
                 AddressChanged = x,
                 OldValue = state.Registers[x],
                 NewValue = (byte)(state.Registers[x] * 2)
-            };
-
-            stateChange.RegisterChanges.Add(registerChange);
+            });
 
             AddressChange<byte> carryChange = new AddressChange<byte>()
             {

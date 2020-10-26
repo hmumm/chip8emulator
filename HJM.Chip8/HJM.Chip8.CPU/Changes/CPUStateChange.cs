@@ -15,18 +15,33 @@ namespace HJM.Chip8.CPU.Changes
         public Change<ushort>? ProgramCounterChange { get; set; }
         public Change<ushort>? IndexRegisterChange { get; set; }
         public StackChange? StackChange { get; set; }
-        public Change<bool>? SoundFlagChange { get; set; }
+        public Change<byte>? SoundTimerChange { get; set; }
+        public Change<byte>? DelayTimerChange { get; set; }
 
         /// <summary>
-        /// Increments the program counter
+        /// Increments the program counter by 2 moving to the next instruction
         /// </summary>
         /// <param name="oldValue">Previous value of the program counter</param>
         public void IncrementProgramCounter(ushort oldValue)
         {
-            Change<ushort> programCounterChange = new Change<ushort>();
-            programCounterChange.OldValue = oldValue;
-            programCounterChange.NewValue = (ushort)(oldValue + 2);
-            ProgramCounterChange = programCounterChange;
+            ProgramCounterChange = new Change<ushort>
+            {
+                OldValue = oldValue,
+                NewValue = (ushort)(oldValue + 2)
+            };
+        }
+
+        /// <summary>
+        /// Increments the program counter by 4 instead of 2, skipping the next instruction
+        /// </summary>
+        /// <param name="oldValue">Previous value of the program counter</param>
+        public void SkipNextInstruction(ushort oldValue)
+        {
+            ProgramCounterChange = new Change<ushort>
+            {
+                OldValue = oldValue,
+                NewValue = (ushort)(oldValue + 4)
+            };
         }
     }
 }

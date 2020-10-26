@@ -6,11 +6,11 @@ using System.Text;
 namespace HJM.Chip8.CPU.Instructions
 {
     /// <summary>
-    /// 1nnn - JP addr
-    /// Jump to location nnn.
-    /// The interpreter sets the program counter to nnn.
+    /// Bnnn - JP V0, addr
+    /// Jump to location nnn + V0.
+    /// The program counter is set to nnn plus the value of V0.
     /// </summary>
-    public class JP_1nnn : Instruction
+    public class JP_Bnnn : Instruction
     {
         public override CPUStateChange Execute(in CPUState state)
         {
@@ -18,10 +18,10 @@ namespace HJM.Chip8.CPU.Instructions
 
             ushort nnn = (ushort)(state.OpCode & 0x0FFF);
 
-            stateChange.ProgramCounterChange = new Change<ushort>
+            stateChange.ProgramCounterChange = new Change<ushort>()
             {
                 OldValue = state.ProgramCounter,
-                NewValue = nnn
+                NewValue = (ushort)(nnn + state.Registers[0])
             };
 
             return stateChange;

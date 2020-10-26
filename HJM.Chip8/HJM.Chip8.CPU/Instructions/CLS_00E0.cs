@@ -17,11 +17,12 @@ namespace HJM.Chip8.CPU.Instructions
 
             for (int i = 0; i < 64 * 32; i++)
             {
-                AddressChange<byte> graphicsChange = new AddressChange<byte>();
-                graphicsChange.AddressChanged = (byte)i;
-                graphicsChange.OldValue = state.Graphics[i];
-                graphicsChange.NewValue = 0;
-                stateChange.GraphicsChanges.Add(graphicsChange);
+                stateChange.GraphicsChanges.Add(new AddressChange<byte>
+                {
+                    AddressChanged = (byte)i,
+                    OldValue = state.Graphics[i],
+                    NewValue = 0
+                });
             }
 
             stateChange.IncrementProgramCounter(state.ProgramCounter);

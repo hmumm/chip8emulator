@@ -16,21 +16,17 @@ namespace HJM.Chip8.CPU.Instructions
         {
             CPUStateChange stateChange = new CPUStateChange();
 
-            Change<ushort> programCounterChange = new Change<ushort>()
-            {
-                OldValue = state.ProgramCounter
-            };
+            byte x = (byte)((state.OpCode & 0x0F00) >> 8);
+            byte y = (byte)((state.OpCode & 0x00F0) >> 4);
 
-            if (state.Registers[(state.OpCode & 0x0F00) >> 8] == state.Registers[(state.OpCode & 0x00F0) >> 4])
+            if (state.Registers[x] == state.Registers[y])
             {
-                programCounterChange.NewValue = (ushort)(state.ProgramCounter + 4);
+                stateChange.SkipNextInstruction(state.ProgramCounter);
             }
             else
             {
-                programCounterChange.NewValue = (ushort)(state.ProgramCounter + 2);
+                stateChange.IncrementProgramCounter(state.ProgramCounter);
             }
-
-            stateChange.ProgramCounterChange = programCounterChange;
 
             return stateChange;
         }

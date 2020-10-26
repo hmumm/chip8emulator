@@ -17,16 +17,14 @@ namespace HJM.Chip8.CPU.Instructions
             CPUStateChange stateChange = new CPUStateChange();
 
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
-            byte kk = (byte)(state.Registers[x] + state.OpCode & 0x00FF);
+            byte kk = (byte)(state.Registers[x] + (state.OpCode & 0x00FF));
 
-            AddressChange<byte> registerChange = new AddressChange<byte>()
+            stateChange.RegisterChanges.Add(new AddressChange<byte>()
             {
                 AddressChanged = x,
                 OldValue = state.Registers[x],
                 NewValue = kk
-            };
-
-            stateChange.RegisterChanges.Add(registerChange);
+            });
 
             stateChange.IncrementProgramCounter(state.ProgramCounter);
 

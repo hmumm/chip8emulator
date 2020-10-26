@@ -6,25 +6,23 @@ using System.Text;
 namespace HJM.Chip8.CPU.Instructions
 {
     /// <summary>
-    /// 8xy0 - LD Vx, Vy
-    /// Set Vx = Vy.
-    /// Stores the value of register Vy in register Vx.
+    /// Fx29 - LD F, Vx
+    /// Set I = location of sprite for digit Vx.
+    /// The value of I is set to the location for the hexadecimal sprite corresponding to the value of Vx. See section 2.4, Display, for more information on the Chip-8 hexadecimal font.
     /// </summary>
-    public class LD_8xy0 : Instruction
+    public class LD_Fx29 : Instruction
     {
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();
 
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
-            byte y = (byte)((state.OpCode & 0x00F0) >> 4);
 
-            stateChange.RegisterChanges.Add(new AddressChange<byte>()
+            stateChange.IndexRegisterChange = new Change<ushort>()
             {
-                AddressChanged = x,
-                OldValue = state.Registers[x],
-                NewValue = (byte)(state.Registers[y])
-            });
+                OldValue = state.IndexRegister,
+                NewValue = (ushort)(state.Registers[x] * 0x5)
+            };
 
             stateChange.IncrementProgramCounter(state.ProgramCounter);
 

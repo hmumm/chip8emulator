@@ -6,25 +6,23 @@ using System.Text;
 namespace HJM.Chip8.CPU.Instructions
 {
     /// <summary>
-    /// 8xy0 - LD Vx, Vy
-    /// Set Vx = Vy.
-    /// Stores the value of register Vy in register Vx.
+    /// Fx1E - ADD I, Vx
+    /// Set I = I + Vx.
+    /// The values of I and Vx are added, and the results are stored in I.
     /// </summary>
-    public class LD_8xy0 : Instruction
+    public class ADD_Fx1E : Instruction
     {
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();
 
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
-            byte y = (byte)((state.OpCode & 0x00F0) >> 4);
 
-            stateChange.RegisterChanges.Add(new AddressChange<byte>()
+            stateChange.IndexRegisterChange = new Change<ushort>()
             {
-                AddressChanged = x,
-                OldValue = state.Registers[x],
-                NewValue = (byte)(state.Registers[y])
-            });
+                OldValue = state.IndexRegister,
+                NewValue = (ushort)(state.Registers[x] + state.IndexRegister)
+            };
 
             stateChange.IncrementProgramCounter(state.ProgramCounter);
 

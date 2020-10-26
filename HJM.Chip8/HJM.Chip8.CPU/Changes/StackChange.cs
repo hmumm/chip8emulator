@@ -9,7 +9,7 @@ namespace HJM.Chip8.CPU.Changes
     /// </summary>
     public class StackChange
     {
-        public AddressChange<ushort> AddressStackChange { get; set; } = new AddressChange<ushort>();
-        public Change<ushort> StackPointerChange { get; set; } = new Change<ushort>();
+        public AddressChange<ushort>? AddressStackChange { get; set; }
+        public Change<ushort>? StackPointerChange { get; set; }
     }
 }
