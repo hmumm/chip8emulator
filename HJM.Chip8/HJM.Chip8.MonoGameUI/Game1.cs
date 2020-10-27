@@ -35,7 +35,7 @@ namespace HJM.Chip8.MonoGameUI
         protected override void Initialize()
         {
             _chip8.Initalize();
-            _chip8.LoadGame(@"C:\Users\Hayden\Downloads\myChip8-bin-src\myChip8-bin-src\INVADERS.c8");
+            _chip8.LoadGame(@"C:\Users\Hayden\Downloads\myChip8-bin-src\myChip8-bin-src\tetris.c8");
 
             _graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;

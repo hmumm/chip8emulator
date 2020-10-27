@@ -23,7 +23,7 @@ namespace HJM.Chip8.CPU.Instructions
             {
                 AddressChanged = x,
                 OldValue = state.Registers[x],
-                NewValue = (byte)(state.Registers[x] + state.Registers[y])
+                NewValue = (byte)(state.Registers[x] - state.Registers[y])
             });
 
             AddressChange<byte> carryChange = new AddressChange<byte>()

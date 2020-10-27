@@ -39,16 +39,16 @@ namespace HJM.Chip8.CPU.Instructions
                 {
                     if ((pixel & (0x80 >> xline)) != 0)
                     {
-                        int currentAddress = x + xline + ((y + yline) * 64);
+                        int address = (x + xline + ((y + yline) * 64));
 
-                        if (state.Graphics[currentAddress] == 1)
+                        if (state.Graphics[address] == 1)
                             collisionChange.NewValue = 0x1;
 
                         stateChange.GraphicsChanges.Add(new AddressChange<byte>()
                         {
-                            AddressChanged = currentAddress,
-                            OldValue = state.Graphics[currentAddress],
-                            NewValue = (byte)(state.Graphics[currentAddress] ^ 1)
+                            AddressChanged = address,
+                            OldValue = state.Graphics[address],
+                            NewValue = (byte)(state.Graphics[address] ^ 1)
                         });
                     }
                 }

@@ -24,7 +24,7 @@ namespace HJM.Chip8.CPU.Instructions
                 {
                     AddressChanged = i,
                     OldValue = state.Registers[i],
-                    NewValue = state.Memory[state.IndexRegister + 1]
+                    NewValue = state.Memory[state.IndexRegister + i]
                 });
             }
 
