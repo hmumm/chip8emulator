@@ -34,31 +34,64 @@ namespace HJM.Chip8.CPU
         /// <param name="stateChange">state change to apply</param>
         public void ApplyStateChange(CPUStateChange stateChange)
         {
+            applyRegisterChanges(stateChange);
+
+            applyMemoryChanges(stateChange);
+
+            applyGraphicsChanges(stateChange);
+
+            applyProgramRegisterChange(stateChange);
+
+            applyIndexRegisterChange(stateChange);
+
+            applyStackChange(stateChange);
+
+            applySoundTimerChange(stateChange);
+
+            applyDelayTimerChange(stateChange);
+        }
+
+        private void applyRegisterChanges(CPUStateChange stateChange)
+        {
             foreach (AddressChange<byte> registerChange in stateChange.RegisterChanges)
             {
                 Registers[registerChange.AddressChanged] = registerChange.NewValue;
             }
+        }
 
+        private void applyMemoryChanges(CPUStateChange stateChange)
+        {
             foreach (AddressChange<byte> memoryChange in stateChange.MemoryChanges)
             {
                 Memory[memoryChange.AddressChanged] = memoryChange.NewValue;
             }
-
+        }
+        private void applyGraphicsChanges(CPUStateChange stateChange)
+        {
             foreach (AddressChange<byte> graphicChange in stateChange.GraphicsChanges)
             {
                 Graphics[graphicChange.AddressChanged] = graphicChange.NewValue;
             }
+        }
 
+        private void applyProgramRegisterChange(CPUStateChange stateChange)
+        {
             if (stateChange.ProgramCounterChange != null)
             {
                 ProgramCounter = stateChange.ProgramCounterChange.NewValue;
             }
+        }
 
+        private void applyIndexRegisterChange(CPUStateChange stateChange)
+        {
             if (stateChange.IndexRegisterChange != null)
             {
                 IndexRegister = stateChange.IndexRegisterChange.NewValue;
             }
+        }
 
+        private void applyStackChange(CPUStateChange stateChange)
+        {
             if (stateChange.StackChange != null)
             {
                 if (stateChange.StackChange.StackPointerChange != null)
@@ -71,70 +104,21 @@ namespace HJM.Chip8.CPU
                     Stack[stateChange.StackChange.AddressStackChange.AddressChanged] = stateChange.StackChange.AddressStackChange.NewValue;
                 }
             }
+        }
 
+        private void applySoundTimerChange(CPUStateChange stateChange)
+        {
             if (stateChange.SoundTimerChange != null)
             {
                 SoundTimer = stateChange.SoundTimerChange.NewValue;
             }
+        }
 
+        private void applyDelayTimerChange(CPUStateChange stateChange)
+        {
             if (stateChange.DelayTimerChange != null)
             {
                 DelayTimer = stateChange.DelayTimerChange.NewValue;
-            }
-        }
-
-        /// <summary>
-        /// Revert the given state change
-        /// </summary>
-        /// <param name="stateChange">State change to revert</param>
-        public void RevertStateChange(CPUStateChange stateChange)
-        {
-            foreach (AddressChange<byte> registerChange in stateChange.RegisterChanges)
-            {
-                Registers[registerChange.AddressChanged] = registerChange.OldValue;
-            }
-
-            foreach (AddressChange<byte> memoryChange in stateChange.MemoryChanges)
-            {
-                Memory[memoryChange.AddressChanged] = memoryChange.OldValue;
-            }
-
-            foreach (AddressChange<byte> graphicChange in stateChange.GraphicsChanges)
-            {
-                Graphics[graphicChange.AddressChanged] = graphicChange.OldValue;
-            }
-
-            if (stateChange.ProgramCounterChange != null)
-            {
-                ProgramCounter = stateChange.ProgramCounterChange.OldValue;
-            }
-
-            if (stateChange.IndexRegisterChange != null)
-            {
-                IndexRegister = stateChange.IndexRegisterChange.OldValue;
-            }
-
-            if (stateChange.StackChange != null)
-            {
-                if (stateChange.StackChange.StackPointerChange != null)
-                {
-                    StackPointer = stateChange.StackChange.StackPointerChange.OldValue;
-                }
-
-                if (stateChange.StackChange.AddressStackChange != null)
-                {
-                    Stack[stateChange.StackChange.AddressStackChange.AddressChanged] = stateChange.StackChange.AddressStackChange.OldValue;
-                }
-            }
-
-            if (stateChange.SoundTimerChange != null)
-            {
-                SoundTimer = stateChange.SoundTimerChange.OldValue;
-            }
-
-            if (stateChange.DelayTimerChange != null)
-            {
-                DelayTimer = stateChange.DelayTimerChange.OldValue;
             }
         }
     }
