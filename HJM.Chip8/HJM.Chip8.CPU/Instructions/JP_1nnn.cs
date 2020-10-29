@@ -20,7 +20,6 @@ namespace HJM.Chip8.CPU.Instructions
 
             stateChange.ProgramCounterChange = new Change<ushort>
             {
-                OldValue = state.ProgramCounter,
                 NewValue = nnn
             };
 

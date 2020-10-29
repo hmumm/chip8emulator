@@ -20,7 +20,6 @@ namespace HJM.Chip8.CPU.Instructions
 
             stateChange.SoundTimerChange = new Change<byte>()
             {
-                OldValue = state.SoundTimer,
                 NewValue = state.Registers[x]
             };
 

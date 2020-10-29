@@ -21,21 +21,18 @@ namespace HJM.Chip8.CPU.Instructions
             stateChange.MemoryChanges.Add(new AddressChange<byte>()
             {
                 AddressChanged = state.IndexRegister,
-                OldValue = state.Memory[state.IndexRegister],
                 NewValue = (byte)(state.Registers[x] / 100)
             });
 
             stateChange.MemoryChanges.Add(new AddressChange<byte>()
             {
                 AddressChanged = state.IndexRegister + 1,
-                OldValue = state.Memory[state.IndexRegister + 1],
                 NewValue = (byte)((state.Registers[x] / 10) % 10)
             });
 
             stateChange.MemoryChanges.Add(new AddressChange<byte>()
             {
                 AddressChanged = state.IndexRegister + 2,
-                OldValue = state.Memory[state.IndexRegister + 2],
                 NewValue = (byte)((state.Registers[x] % 100) % 10)
             });
 

@@ -26,7 +26,6 @@ namespace HJM.Chip8.CPU.Changes
         {
             ProgramCounterChange = new Change<ushort>
             {
-                OldValue = oldValue,
                 NewValue = (ushort)(oldValue + 2)
             };
         }
@@ -39,7 +38,6 @@ namespace HJM.Chip8.CPU.Changes
         {
             ProgramCounterChange = new Change<ushort>
             {
-                OldValue = oldValue,
                 NewValue = (ushort)(oldValue + 4)
             };
         }

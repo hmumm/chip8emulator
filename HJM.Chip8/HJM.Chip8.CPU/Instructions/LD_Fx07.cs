@@ -21,7 +21,6 @@ namespace HJM.Chip8.CPU.Instructions
             stateChange.RegisterChanges.Add(new AddressChange<byte>()
             {
                 AddressChanged = x,
-                OldValue = state.Registers[x],
                 NewValue = state.DelayTimer
             });
 

@@ -22,14 +22,12 @@ namespace HJM.Chip8.CPU.Instructions
             stateChange.RegisterChanges.Add(new AddressChange<byte>()
             {
                 AddressChanged = x,
-                OldValue = state.Registers[x],
                 NewValue = (byte)(state.Registers[x] - state.Registers[y])
             });
 
             AddressChange<byte> carryChange = new AddressChange<byte>()
             {
-                AddressChanged = 0xf,
-                OldValue = state.Registers[0xf]
+                AddressChanged = 0xf
             };
 
             if (state.Registers[x] > state.Registers[y])

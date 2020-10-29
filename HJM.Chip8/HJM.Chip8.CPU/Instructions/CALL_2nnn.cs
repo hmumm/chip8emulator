@@ -23,19 +23,16 @@ namespace HJM.Chip8.CPU.Instructions
             stateChange.StackChange.AddressStackChange = new AddressChange<ushort>
             {
                 AddressChanged = state.StackPointer,
-                OldValue = state.Stack[state.StackPointer],
                 NewValue = state.ProgramCounter
             };
 
             stateChange.StackChange.StackPointerChange = new Change<ushort>
             {
-                OldValue = state.StackPointer,
                 NewValue = (ushort)(state.StackPointer + 1)
             };
 
             stateChange.ProgramCounterChange = new Change<ushort>
             {
-                OldValue = state.ProgramCounter,
                 NewValue = nnn
             };
 

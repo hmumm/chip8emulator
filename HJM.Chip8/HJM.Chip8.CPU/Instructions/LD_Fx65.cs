@@ -23,7 +23,6 @@ namespace HJM.Chip8.CPU.Instructions
                 stateChange.RegisterChanges.Add(new AddressChange<byte>()
                 {
                     AddressChanged = i,
-                    OldValue = state.Registers[i],
                     NewValue = state.Memory[state.IndexRegister + i]
                 });
             }

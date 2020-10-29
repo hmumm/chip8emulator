@@ -28,7 +28,6 @@ namespace HJM.Chip8.CPU.Instructions
             AddressChange<byte> collisionChange = new AddressChange<byte>()
             {
                 AddressChanged = 0xF,
-                OldValue = state.Registers[0xF],
                 NewValue = 0x0
             };
 
@@ -47,7 +46,6 @@ namespace HJM.Chip8.CPU.Instructions
                         stateChange.GraphicsChanges.Add(new AddressChange<byte>()
                         {
                             AddressChanged = address,
-                            OldValue = state.Graphics[address],
                             NewValue = (byte)(state.Graphics[address] ^ 1)
                         });
                     }

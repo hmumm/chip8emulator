@@ -20,7 +20,6 @@ namespace HJM.Chip8.CPU.Instructions
 
             stateChange.IndexRegisterChange = new Change<ushort>()
             {
-                OldValue = state.IndexRegister,
                 NewValue = nnn
             };
 

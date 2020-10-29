@@ -20,7 +20,6 @@ namespace HJM.Chip8.CPU.Instructions
 
             stateChange.DelayTimerChange = new Change<byte>()
             {
-                OldValue = state.DelayTimer,
                 NewValue = state.Registers[x]
             };
 

@@ -12,7 +12,6 @@ namespace HJM.Chip8.CPU.Changes
     {
         public string Description { get; set; } = string.Empty;
 #pragma warning disable CS8601 // Possible null reference assignment.
-        public T OldValue { get; set; } = default;
         public T NewValue { get; set; } = default;
 #pragma warning restore CS8601 // Possible null reference assignment.
     }

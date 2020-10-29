@@ -20,7 +20,6 @@ namespace HJM.Chip8.CPU.Instructions
                 stateChange.GraphicsChanges.Add(new AddressChange<byte>
                 {
                     AddressChanged = i,
-                    OldValue = state.Graphics[i],
                     NewValue = 0
                 });
             }

@@ -22,7 +22,6 @@ namespace HJM.Chip8.CPU.Instructions
             AddressChange<byte> registerChange = new AddressChange<byte>()
             {
                 AddressChanged = x,
-                OldValue = state.Registers[x],
                 NewValue = kk
             };
 
