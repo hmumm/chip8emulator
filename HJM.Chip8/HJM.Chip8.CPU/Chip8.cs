@@ -105,22 +105,21 @@ namespace HJM.Chip8.CPU
         /// </summary>
         public void EmulateCycle()
         {
-            // Fetch Opcode
+            fetchOpCode();
+
+            executeInstruction();
+
+            updateTimers();
+        }
+
+        private void fetchOpCode()
+        {
             // Convert 2 1 byte memory addresses to 1 2 byte op code
             State.OpCode = (ushort)(State.Memory[State.ProgramCounter] << 8 | State.Memory[State.ProgramCounter + 1]);
+        }
 
-            Log.Debug($"Executing OpCode {State.OpCode}");
-
-            // Execute OpCode
-            Instruction? instruction = Instructions.GetValueOrDefault((State.OpCode & 0xF000) >> 12);
-
-            if (instruction == null)
-            {
-                throw new InvalidOpCodeException(State.OpCode);
-            }
-
-            State.ApplyStateChange(instruction.Execute(State));
-
+        private void updateTimers()
+        {
             // Update timers
             if (State.DelayTimer > 0)
                 State.DelayTimer--;
@@ -135,6 +134,21 @@ namespace HJM.Chip8.CPU
             {
                 State.SoundFlag = false;
             }
+        }
+
+        private void executeInstruction()
+        {
+            Log.Debug($"Executing OpCode {State.OpCode}");
+
+            // Execute OpCode
+            Instruction? instruction = Instructions.GetValueOrDefault((State.OpCode & 0xF000) >> 12);
+
+            if (instruction == null)
+            {
+                throw new InvalidOpCodeException(State.OpCode);
+            }
+
+            State.ApplyStateChange(instruction.Execute(State));
         }
     }
 }

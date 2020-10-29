@@ -32,9 +32,9 @@ namespace HJM.Chip8.CPU.Instructions
 
             if (keyValue > -1)
             {
-                stateChange.RegisterChanges.Add(new AddressChange<byte>()
+                stateChange.RegisterChanges.Add(new ArrayChange<byte>()
                 {
-                    AddressChanged = x,
+                    IndexChanged = x,
                     NewValue = (byte)keyValue
                 });
 

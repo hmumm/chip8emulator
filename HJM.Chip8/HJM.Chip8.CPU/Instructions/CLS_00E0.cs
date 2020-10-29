@@ -17,9 +17,9 @@ namespace HJM.Chip8.CPU.Instructions
 
             for (int i = 0; i < 64 * 32; i++)
             {
-                stateChange.GraphicsChanges.Add(new AddressChange<byte>
+                stateChange.GraphicsChanges.Add(new ArrayChange<byte>
                 {
-                    AddressChanged = i,
+                    IndexChanged = i,
                     NewValue = 0
                 });
             }

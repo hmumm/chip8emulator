@@ -19,9 +19,9 @@ namespace HJM.Chip8.CPU.Instructions
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
             byte kk = (byte)(state.OpCode & 0x00FF);
 
-            AddressChange<byte> registerChange = new AddressChange<byte>()
+            ArrayChange<byte> registerChange = new ArrayChange<byte>()
             {
-                AddressChanged = x,
+                IndexChanged = x,
                 NewValue = kk
             };
 

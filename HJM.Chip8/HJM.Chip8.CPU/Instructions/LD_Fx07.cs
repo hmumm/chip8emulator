@@ -18,9 +18,9 @@ namespace HJM.Chip8.CPU.Instructions
 
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
 
-            stateChange.RegisterChanges.Add(new AddressChange<byte>()
+            stateChange.RegisterChanges.Add(new ArrayChange<byte>()
             {
-                AddressChanged = x,
+                IndexChanged = x,
                 NewValue = state.DelayTimer
             });
 

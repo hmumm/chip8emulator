@@ -20,9 +20,9 @@ namespace HJM.Chip8.CPU.Instructions
 
             stateChange.StackChange = new StackChange();
 
-            stateChange.StackChange.AddressStackChange = new AddressChange<ushort>
+            stateChange.StackChange.AddressStackChange = new ArrayChange<ushort>
             {
-                AddressChanged = state.StackPointer,
+                IndexChanged = state.StackPointer,
                 NewValue = state.ProgramCounter
             };
 

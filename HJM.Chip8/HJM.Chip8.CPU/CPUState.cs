@@ -53,24 +53,24 @@ namespace HJM.Chip8.CPU
 
         private void applyRegisterChanges(CPUStateChange stateChange)
         {
-            foreach (AddressChange<byte> registerChange in stateChange.RegisterChanges)
+            foreach (ArrayChange<byte> registerChange in stateChange.RegisterChanges)
             {
-                Registers[registerChange.AddressChanged] = registerChange.NewValue;
+                Registers[registerChange.IndexChanged] = registerChange.NewValue;
             }
         }
 
         private void applyMemoryChanges(CPUStateChange stateChange)
         {
-            foreach (AddressChange<byte> memoryChange in stateChange.MemoryChanges)
+            foreach (ArrayChange<byte> memoryChange in stateChange.MemoryChanges)
             {
-                Memory[memoryChange.AddressChanged] = memoryChange.NewValue;
+                Memory[memoryChange.IndexChanged] = memoryChange.NewValue;
             }
         }
         private void applyGraphicsChanges(CPUStateChange stateChange)
         {
-            foreach (AddressChange<byte> graphicChange in stateChange.GraphicsChanges)
+            foreach (ArrayChange<byte> graphicChange in stateChange.GraphicsChanges)
             {
-                Graphics[graphicChange.AddressChanged] = graphicChange.NewValue;
+                Graphics[graphicChange.IndexChanged] = graphicChange.NewValue;
             }
         }
 
@@ -101,7 +101,7 @@ namespace HJM.Chip8.CPU
 
                 if (stateChange.StackChange.AddressStackChange != null)
                 {
-                    Stack[stateChange.StackChange.AddressStackChange.AddressChanged] = stateChange.StackChange.AddressStackChange.NewValue;
+                    Stack[stateChange.StackChange.AddressStackChange.IndexChanged] = stateChange.StackChange.AddressStackChange.NewValue;
                 }
             }
         }

@@ -20,9 +20,9 @@ namespace HJM.Chip8.CPU.Instructions
 
             for (int i = 0; i <= x; i++)
             {
-                stateChange.MemoryChanges.Add(new AddressChange<byte>()
+                stateChange.MemoryChanges.Add(new ArrayChange<byte>()
                 {
-                    AddressChanged = state.IndexRegister + i,
+                    IndexChanged = state.IndexRegister + i,
                     NewValue = state.Registers[i]
                 });
             }

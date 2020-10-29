@@ -25,9 +25,9 @@ namespace HJM.Chip8.CPU.Instructions
             ushort height = (ushort)(state.OpCode & 0x000F);
             ushort pixel;
 
-            AddressChange<byte> collisionChange = new AddressChange<byte>()
+            ArrayChange<byte> collisionChange = new ArrayChange<byte>()
             {
-                AddressChanged = 0xF,
+                IndexChanged = 0xF,
                 NewValue = 0x0
             };
 
@@ -43,9 +43,9 @@ namespace HJM.Chip8.CPU.Instructions
                         if (state.Graphics[address] == 1)
                             collisionChange.NewValue = 0x1;
 
-                        stateChange.GraphicsChanges.Add(new AddressChange<byte>()
+                        stateChange.GraphicsChanges.Add(new ArrayChange<byte>()
                         {
-                            AddressChanged = address,
+                            IndexChanged = address,
                             NewValue = (byte)(state.Graphics[address] ^ 1)
                         });
                     }

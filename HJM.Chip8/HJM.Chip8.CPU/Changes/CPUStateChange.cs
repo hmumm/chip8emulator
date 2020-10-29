@@ -9,9 +9,9 @@ namespace HJM.Chip8.CPU.Changes
     /// </summary>
     public class CPUStateChange
     {
-        public List<AddressChange<byte>> RegisterChanges { get; } = new List<AddressChange<byte>>();
-        public List<AddressChange<byte>> MemoryChanges { get; } = new List<AddressChange<byte>>();
-        public List<AddressChange<byte>> GraphicsChanges { get; } = new List<AddressChange<byte>>();
+        public List<ArrayChange<byte>> RegisterChanges { get; } = new List<ArrayChange<byte>>();
+        public List<ArrayChange<byte>> MemoryChanges { get; } = new List<ArrayChange<byte>>();
+        public List<ArrayChange<byte>> GraphicsChanges { get; } = new List<ArrayChange<byte>>();
         public Change<ushort>? ProgramCounterChange { get; set; }
         public Change<ushort>? IndexRegisterChange { get; set; }
         public StackChange? StackChange { get; set; }

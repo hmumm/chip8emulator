@@ -18,15 +18,15 @@ namespace HJM.Chip8.CPU.Instructions
 
             byte x = (byte)((state.OpCode & 0x0F00) >> 8);
 
-            stateChange.RegisterChanges.Add(new AddressChange<byte>()
+            stateChange.RegisterChanges.Add(new ArrayChange<byte>()
             {
-                AddressChanged = x,
+                IndexChanged = x,
                 NewValue = (byte)(state.Registers[x] * 2)
             });
 
-            AddressChange<byte> carryChange = new AddressChange<byte>()
+            ArrayChange<byte> carryChange = new ArrayChange<byte>()
             {
-                AddressChanged = 0xf,
+                IndexChanged = 0xf,
                 NewValue = (byte)(state.Registers[x] & 0x1)
             };
 

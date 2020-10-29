@@ -21,9 +21,9 @@ namespace HJM.Chip8.CPU.Instructions
 
             Random rand = new Random();
 
-            stateChange.RegisterChanges.Add(new AddressChange<byte>()
+            stateChange.RegisterChanges.Add(new ArrayChange<byte>()
             {
-                AddressChanged = x,
+                IndexChanged = x,
                 NewValue = (byte)(rand.Next(256) & kk)
             });
 
