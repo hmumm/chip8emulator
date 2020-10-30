@@ -12,6 +12,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class LD_Fx18 : Instruction
     {
+        public override string Description { get; set; } = "Set sound timer = Vx.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

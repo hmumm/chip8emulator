@@ -16,6 +16,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class DRW_Dxyn : Instruction
     {
+        public override string Description { get; set; } = "Dxyn - DRW Vx, Vy, nibble";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

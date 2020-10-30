@@ -12,6 +12,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class ADD_Fx1E : Instruction
     {
+        public override string Description { get; set; } = "Set I = I + Vx.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

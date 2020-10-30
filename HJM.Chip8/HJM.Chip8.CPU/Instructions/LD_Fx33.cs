@@ -12,6 +12,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class LD_Fx33 : Instruction
     {
+        public override string Description { get; set; } = "Store BCD representation of Vx in memory locations I, I+1, and I+2.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

@@ -12,6 +12,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class LD_Fx29 : Instruction
     {
+        public override string Description { get; set; } = "Set I = location of sprite for digit Vx.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

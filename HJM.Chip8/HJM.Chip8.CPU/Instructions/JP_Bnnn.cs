@@ -12,6 +12,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class JP_Bnnn : Instruction
     {
+        public override string Description { get; set; } = "Jump to location nnn + V0.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

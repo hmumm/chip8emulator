@@ -13,7 +13,7 @@ namespace HJM.Chip8.CPU.Instructions
         /// <summary>
         /// Description of what the instruction does
         /// </summary>
-        string Description { get; set; } = string.Empty;
+        public abstract string Description { get; set; }
 
         /// <summary>
         /// Use the current state to execute the instruction and return the neccessary changes

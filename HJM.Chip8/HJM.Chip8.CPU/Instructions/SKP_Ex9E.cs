@@ -12,6 +12,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class SKP_Ex9E : Instruction
     {
+        public override string Description { get; set; } = "Skip next instruction if key with the value of Vx is pressed.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

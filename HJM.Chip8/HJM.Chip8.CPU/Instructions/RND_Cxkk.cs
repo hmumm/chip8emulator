@@ -12,6 +12,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class RND_Cxkk : Instruction
     {
+        public override string Description { get; set; } = "Set Vx = random byte AND kk.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

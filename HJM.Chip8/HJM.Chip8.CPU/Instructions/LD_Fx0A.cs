@@ -12,6 +12,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class LD_Fx0A : Instruction
     {
+        public override string Description { get; set; } = "Wait for a key press, store the value of the key in Vx.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

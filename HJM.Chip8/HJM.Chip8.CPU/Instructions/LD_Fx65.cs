@@ -12,6 +12,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class LD_Fx65 : Instruction
     {
+        public override string Description { get; set; } = "Read registers V0 through Vx from memory starting at location I.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

@@ -12,6 +12,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class SE_3xkk : Instruction
     {
+        public override string Description { get; set; } = "Skip next instruction if Vx = kk.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();

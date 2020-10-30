@@ -12,6 +12,9 @@ namespace HJM.Chip8.CPU.Instructions
     public class _8000 : Instruction
     {
         private Dictionary<int, Instruction> Instructions = new Dictionary<int, Instruction>();
+
+        public override string Description { get; set; } = "Call the 0x8000 instruction";
+
         public _8000()
         {
             Instructions.Add(0x0000, new LD_8xy0());
@@ -33,6 +36,8 @@ namespace HJM.Chip8.CPU.Instructions
             {
                 throw new InvalidOpCodeException(state.OpCode);
             }
+
+            Description = instruction.Description;
 
             return instruction.Execute(state);
         }

@@ -13,6 +13,8 @@ namespace HJM.Chip8.CPU.Instructions
     /// </summary>
     public class XOR_8xy3 : Instruction
     {
+        public override string Description { get; set; } = "Set Vx = Vx XOR Vy.";
+
         public override CPUStateChange Execute(in CPUState state)
         {
             CPUStateChange stateChange = new CPUStateChange();
