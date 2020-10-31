@@ -16,6 +16,11 @@ namespace HJM.Chip8.CPU.Instructions
         public abstract string Description { get; set; }
 
         /// <summary>
+        /// OpCode used to look up this instruction
+        /// </summary>
+        public abstract ushort OpCode { get; set; }
+
+        /// <summary>
         /// Use the current state to execute the instruction and return the neccessary changes
         /// </summary>
         /// <param name="state">The current state of the cpu</param>

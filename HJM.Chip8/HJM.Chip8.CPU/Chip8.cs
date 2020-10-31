@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HJM.Chip8.CPU.Exceptions;
 using HJM.Chip8.CPU.Instructions;
+using HJM.Chip8.CPU.Instructions.Chip8;
 using Serilog;
 
 namespace HJM.Chip8.CPU
@@ -12,7 +14,7 @@ namespace HJM.Chip8.CPU
     /// </summary>
     public class Chip8
     {
-        private Dictionary<int, Instruction> Instructions = new Dictionary<int, Instruction>();
+        private Dictionary<ushort, Instruction> Instructions = new Dictionary<ushort, Instruction>();
         public CPUState State { get; set; } = new CPUState();
 
         private readonly byte[] FONT_SET =
@@ -37,23 +39,23 @@ namespace HJM.Chip8.CPU
 
         public Chip8()
         {
-            // Load in all of the instructions
-            Instructions.Add(0x0, new _0000());
-            Instructions.Add(0x1, new JP_1nnn());
-            Instructions.Add(0x2, new CALL_2nnn());
-            Instructions.Add(0x3, new SE_3xkk());
-            Instructions.Add(0x4, new SNE_4xkk());
-            Instructions.Add(0x5, new SE_5xy0());
-            Instructions.Add(0x6, new LD_6xkk());
-            Instructions.Add(0x7, new ADD_7xkk());
-            Instructions.Add(0x8, new _8000());
-            Instructions.Add(0x9, new SNE_9xy0());
-            Instructions.Add(0xA, new LD_Annn());
-            Instructions.Add(0xB, new JP_Bnnn());
-            Instructions.Add(0xC, new RND_Cxkk());
-            Instructions.Add(0xD, new DRW_Dxyn());
-            Instructions.Add(0xE, new _E000());
-            Instructions.Add(0xF, new _F000());
+            // Get all types that are Instructions under HJM.Chip8.CPU.Instructions.Chip8 namespace.
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => typeof(Instruction).IsAssignableFrom(p) && p.Namespace == "HJM.Chip8.CPU.Instructions.Chip8");
+
+            // Make instances of these types and add to the Instruction dictionary.
+            foreach (Type type in types)
+            {
+                Instruction? instruction = (Instruction?)Activator.CreateInstance(type);
+
+                if (instruction == null)
+                {
+                    throw new NullReferenceException("Instruction instance was null");
+                }
+
+                Instructions.Add(instruction.OpCode, instruction);
+            }
         }
 
         /// <summary>
@@ -141,7 +143,7 @@ namespace HJM.Chip8.CPU
             Log.Debug($"Executing OpCode {State.OpCode}");
 
             // Execute OpCode
-            Instruction? instruction = Instructions.GetValueOrDefault((State.OpCode & 0xF000) >> 12);
+            Instruction? instruction = Instructions.GetValueOrDefault((ushort)(State.OpCode & 0xF000));
 
             if (instruction == null)
             {
