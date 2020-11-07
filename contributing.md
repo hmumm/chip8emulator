@@ -33,7 +33,7 @@ Note I have not tested this if you have make a pullrequest with the steps you to
 
 ## First Time Contributors
 
-Issues tagged with hacktoberfest, help wanted and good first issue are usually a great place to start!
+Issues tagged with good first issue, help wanted, and hacktoberfest are usually a great place to start!
 
 ## Style guide
 

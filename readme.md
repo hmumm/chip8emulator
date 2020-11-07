@@ -12,7 +12,7 @@ This project is licensed under the MIT License - see the LICENSE.txt file for de
 
 ## Want to help?
 
-Checkout out contributing.md :)
+Checkout out [contributing.md](contributing.md) :)
 
 ## Acknowledgments
 
