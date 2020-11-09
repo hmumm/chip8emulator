@@ -23,8 +23,10 @@ jobs:
       run: dotnet test HJM.Chip8/HJM.Chip8.sln --no-restore --verbosity normal
     - name: Install zip
       run: sudo apt install zip
+    - name: Change to build directory to zip
+      run: cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/
     - name: Zip
-      run: zip Chip8.zip HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/*
+      run: zip Chip8.zip *
     - name: Release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
@@ -34,4 +36,4 @@ jobs:
         title: "Development Build"
         files: |
             license.txt
-            Chip8.zip
+            HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/Chip8.zip
