@@ -2,8 +2,8 @@ name: .NET Core release
 
 on:
   push:
-    tags: |
-      "v*"
+    tags: 
+      - 'v*'
 
 jobs:
   pre-release:
