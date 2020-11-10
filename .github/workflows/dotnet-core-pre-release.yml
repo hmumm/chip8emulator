@@ -27,6 +27,8 @@ jobs:
       run: cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/
     - name: Zip
       run: zip Chip8.zip *
+    - name: Move
+      run: mv Chip8.zip **/**/**/**/**/Chip8.zip
     - name: Release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
@@ -36,4 +38,4 @@ jobs:
         title: "Development Build"
         files: |
             license.txt
-            HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/Chip8.zip
+            Chip8.zip
