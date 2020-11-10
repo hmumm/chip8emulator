@@ -48,9 +48,9 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: false
-        title: "Release"
+        title: "Release ${GITHUB_REF##*/}"
         files: |
             license.txt
-            Chip8-win-64.zip
-            Chip8-osx-64.zip
-            Chip8-linux-64.zip
+            Chip8-win-x64.zip
+            Chip8-linux-x64.zip
+            Chip8-osx-x64.zip
