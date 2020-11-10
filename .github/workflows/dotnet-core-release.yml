@@ -25,7 +25,7 @@ jobs:
     - name: Install zip
       run: sudo apt install zip
     - name: Zip
-      run: zip Chip8.zip HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/*
+      run: zip **/**/**/**/**/Chip8.zip HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/*
     - name: Release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
