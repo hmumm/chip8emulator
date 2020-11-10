@@ -26,12 +26,6 @@ jobs:
         cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/
         zip -r Chip8.zip *
         mv Chip8.zip ../../../../../
-    - name: ls
-      run: ls
-    - name: Change back to root
-      run: cd ../../../../../
-    - name: ls
-      run: ls
     - name: Release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
