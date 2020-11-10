@@ -21,10 +21,11 @@ jobs:
       run: dotnet build HJM.Chip8/HJM.Chip8.sln --configuration Release --no-restore
     - name: Test
       run: dotnet test HJM.Chip8/HJM.Chip8.sln --no-restore --verbosity normal
-    - name: Change to build directory to zip
-      run: cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/
     - name: Zip
-      run: zip -r Chip8.zip *
+      run: |
+        cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/
+        zip -r Chip8.zip *
+        mv Chip8.zip ../../../../../
     - name: ls
       run: ls
     - name: Change back to root
