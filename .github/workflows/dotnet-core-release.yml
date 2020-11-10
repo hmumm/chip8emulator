@@ -4,7 +4,6 @@ on:
   push:
     tags: |
       "v*"
-      "Beta v*"
 
 jobs:
   pre-release:
