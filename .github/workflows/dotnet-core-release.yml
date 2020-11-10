@@ -2,10 +2,7 @@ name: .NET Core release
 
 on:
   push:
-    tags: |
-        Beta*
-        v*
-
+    branches: [ master ]
 
 jobs:
   pre-release:
@@ -20,28 +17,14 @@ jobs:
         dotnet-version: 3.1.101
     - name: Install dependencies
       run: dotnet restore HJM.Chip8/HJM.Chip8.sln
+    - name: Build
+      run: dotnet build HJM.Chip8/HJM.Chip8.sln --configuration Release --no-restore
     - name: Test
-      run: dotnet test HJM.Chip8/HJM.Chip8.sln --verbosity normal
-    - name: Build win-x64
-      run: dotnet publish HJM.Chip8/HJM.Chip8.MonoGameUI/HJM.Chip8.MonoGameUI.csproj -c Release -r win-x64
-    - name: Build linux-x64
-      run: dotnet publish HJM.Chip8/HJM.Chip8.MonoGameUI/HJM.Chip8.MonoGameUI.csproj -c Release -r linux-x64
-    - name: Build osx-x64
-      run: dotnet publish HJM.Chip8/HJM.Chip8.MonoGameUI/HJM.Chip8.MonoGameUI.csproj -c Release -r osx-x64
+      run: dotnet test HJM.Chip8/HJM.Chip8.sln --no-restore --verbosity normal
     - name: Install zip
       run: sudo apt install zip
-    - name: Change to win directory
-      run: cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/win-x64/publish
-    - name: Zip win
-      run: zip **/**/**/**/**/**/**/Chip8-win-x64.zip *
-    - name: Change to Mac os directory
-      run: cd **/**/osx-x64/publish
-    - name: Zip Mac os
-      run: zip **/**/**/**/**/**/**/Chip8-osx-x64.zip *
-    - name: Change to Linux directory
-      run: cd **/**/linux-x64/publish
-    - name: Zip Linux
-      run: zip **/**/**/**/**/**/**/Chip8-linux-x64.zip *
+    - name: Zip
+      run: zip Chip8.zip HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/*
     - name: Release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
@@ -51,6 +34,4 @@ jobs:
         title: "Release ${GITHUB_REF##*/}"
         files: |
             license.txt
-            Chip8-win-x64.zip
-            Chip8-linux-x64.zip
-            Chip8-osx-x64.zip
+            Chip8.zip
