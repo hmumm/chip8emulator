@@ -4,7 +4,15 @@ Chip 8 programming language interpreter.
 
 ## How to run
 
-1. Currently the easiest way is to open it in Visual Studio using the steps below and run it through there. Easier to run builds should be available soon.
+1. Check the latest release and download the correct version for your operating system. 
+2. On windows execute 'HJM.Chip8.MonoGameUI.exe', and on MacOS and Linux execute 'HJM.Chip8.MonoGameUI'. 
+3. For main versions (tagged v\<major>.\<minior>.\<patch>) you do not need to have .net installed
+
+### To run pre release builds
+
+1. Install .net Core 3.1
+2. Download chip8.zip
+3. run 'dotnet HJM.Chip8.MonoGameUI.dll'
 
 ## License
 
