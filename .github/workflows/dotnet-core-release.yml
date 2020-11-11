@@ -49,6 +49,7 @@ jobs:
         prerelease: false
         files: |
             license.txt
+            readme.md
             Chip8-win-x64.zip
             Chip8-osx-x64.zip
             Chip8-linux-x64.zip
