@@ -44,7 +44,6 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: false
-        title: "Development Build"
         files: |
             license.txt
             Chip8-win-x64.zip
