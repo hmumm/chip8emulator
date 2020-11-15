@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using Serilog;
+using HJM.Chip8.MonoGameUI.Sound;
 
 namespace HJM.Chip8.MonoGameUI
 {
@@ -21,12 +22,14 @@ namespace HJM.Chip8.MonoGameUI
         private bool _threadStopped = false;
         private byte[] _displayBuffer = new byte[4096];
         private byte _bufferedFrameMask = 0b_1111_0000;
+        private SoundInstance _soundInstance;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             _emulatorThread = new Thread(RunCycles);
             _chip8 = new CPU.Chip8();
+            _soundInstance = new SoundInstance();
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -35,7 +38,7 @@ namespace HJM.Chip8.MonoGameUI
         protected override void Initialize()
         {
             _chip8.Initalize();
-            _chip8.LoadGame(@"C:\Users\Hayden\Downloads\myChip8-bin-src\myChip8-bin-src\tetris.c8");
+            _chip8.LoadGame(@"C:\Users\Hayden\Downloads\myChip8-bin-src\myChip8-bin-src\pong2.c8");
 
             _graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
@@ -95,6 +98,8 @@ namespace HJM.Chip8.MonoGameUI
             _chip8.State.Key[0xE] = Convert.ToByte(state.IsKeyDown(Keys.F));
             _chip8.State.Key[0xF] = Convert.ToByte(state.IsKeyDown(Keys.V));
 
+            _soundInstance.Update();
+
             base.Update(gameTime);
         }
 
@@ -145,6 +150,15 @@ namespace HJM.Chip8.MonoGameUI
             while (!_threadStopped)
             {
                 _chip8.EmulateCycle();
+
+                if (_chip8.State.SoundFlag == true)
+                {
+                    _soundInstance.PlaySound();
+                }
+                else
+                {
+                    _soundInstance.StopPlayingSound();
+                }
 
                 while (s.ElapsedMilliseconds < millesecondsPerCycle)
                 {

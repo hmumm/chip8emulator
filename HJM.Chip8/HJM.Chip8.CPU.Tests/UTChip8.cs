@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Threading;
 
 namespace HJM.Chip8.CPU.Tests
 {
@@ -488,6 +489,9 @@ namespace HJM.Chip8.CPU.Tests
 
             chip8.State.Registers[0] = 0xF;
 
+            // Sleep so timer will update
+            Thread.Sleep(50);
+
             chip8.EmulateCycle();
 
             Assert.AreEqual(0xF - 1, chip8.State.DelayTimer);
@@ -501,6 +505,9 @@ namespace HJM.Chip8.CPU.Tests
             chip8.State.Memory[0x0201] = 0x18;
 
             chip8.State.Registers[0] = 0xF;
+
+            // Sleep so timer will update
+            Thread.Sleep(50);
 
             chip8.EmulateCycle();
 
