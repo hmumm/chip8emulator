@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using HJM.Chip8.CPU.Exceptions;
 using HJM.Chip8.CPU.Instructions;
@@ -16,6 +17,9 @@ namespace HJM.Chip8.CPU
     {
         private Dictionary<ushort, Instruction> Instructions = new Dictionary<ushort, Instruction>();
         public CPUState State { get; set; } = new CPUState();
+
+        private Stopwatch timerStopWatch = new Stopwatch();
+        private const double TIMER_INTERVAL = (1 / 60) * 1000;
 
         private readonly byte[] FONT_SET =
         {
@@ -77,6 +81,8 @@ namespace HJM.Chip8.CPU
 
             State.DelayTimer = 0;
             State.SoundTimer = 0;
+
+            timerStopWatch.Restart();
         }
 
         /// <summary>
@@ -122,19 +128,24 @@ namespace HJM.Chip8.CPU
 
         private void updateTimers()
         {
-            // Update timers
-            if (State.DelayTimer > 0)
-                State.DelayTimer--;
+            if (timerStopWatch.ElapsedMilliseconds > TIMER_INTERVAL)
+            {
+                // Update timers
+                if (State.DelayTimer > 0)
+                    State.DelayTimer--;
 
-            if (State.SoundTimer > 0)
-            {
-                // play sound
-                State.SoundTimer--;
-                State.SoundFlag = true;
-            }
-            else
-            {
-                State.SoundFlag = false;
+                if (State.SoundTimer > 0)
+                {
+                    // play sound
+                    State.SoundTimer--;
+                    State.SoundFlag = true;
+                }
+                else
+                {
+                    State.SoundFlag = false;
+                }
+
+                timerStopWatch.Restart();
             }
         }
 
