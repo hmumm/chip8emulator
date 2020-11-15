@@ -19,7 +19,7 @@ namespace HJM.Chip8.CPU
         public CPUState State { get; set; } = new CPUState();
 
         private Stopwatch timerStopWatch = new Stopwatch();
-        private const double TIMER_INTERVAL = (1 / 60) * 1000;
+        private const double TIMER_INTERVAL = (1d / 60d) * 1000d;
 
         private readonly byte[] FONT_SET =
         {
@@ -144,6 +144,8 @@ namespace HJM.Chip8.CPU
                 {
                     State.SoundFlag = false;
                 }
+
+                Log.Information($"Elapsed time since last timer update { timerStopWatch.ElapsedMilliseconds }");
 
                 timerStopWatch.Restart();
             }
