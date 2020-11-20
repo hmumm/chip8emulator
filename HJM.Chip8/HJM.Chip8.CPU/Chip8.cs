@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using HJM.Chip8.CPU.Exceptions;
 using HJM.Chip8.CPU.Instructions;
@@ -93,7 +94,12 @@ namespace HJM.Chip8.CPU
         {
             Log.Information($"Loading game from \"{pathToGame}\".");
 
-            byte[] data = System.IO.File.ReadAllBytes(pathToGame);
+            if (!File.Exists(pathToGame))
+            {
+                throw new FileNotFoundException("Game not found", pathToGame);
+            }
+
+            byte[] data = File.ReadAllBytes(pathToGame);
 
             Log.Information($"Read {data.Length} bytes.");
 
@@ -145,7 +151,7 @@ namespace HJM.Chip8.CPU
                     State.SoundFlag = false;
                 }
 
-                Log.Information($"Elapsed time since last timer update { timerStopWatch.ElapsedMilliseconds }");
+                Log.Debug($"Elapsed time since last timer update { timerStopWatch.ElapsedMilliseconds }");
 
                 timerStopWatch.Restart();
             }

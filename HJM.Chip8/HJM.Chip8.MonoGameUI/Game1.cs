@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Threading;
 using Serilog;
 using HJM.Chip8.MonoGameUI.Sound;
+using HJM.Chip8.MonoGameUI.Terminal;
+using Terminal.Gui;
 
 namespace HJM.Chip8.MonoGameUI
 {
@@ -37,8 +39,10 @@ namespace HJM.Chip8.MonoGameUI
 
         protected override void Initialize()
         {
+
+
             _chip8.Initalize();
-            _chip8.LoadGame(@"C:\Users\Hayden\Downloads\myChip8-bin-src\myChip8-bin-src\pong2.c8");
+            _chip8.LoadGame(GameSelectWindow.getSelectedFilename());
 
             _graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
@@ -54,7 +58,7 @@ namespace HJM.Chip8.MonoGameUI
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _whiteRectangle = new Texture2D(GraphicsDevice, width: 1, height: 1);
-            _whiteRectangle.SetData(new[] { Color.White });
+            _whiteRectangle.SetData(new[] { Microsoft.Xna.Framework.Color.White });
         }
 
         protected override void UnloadContent()
@@ -114,7 +118,7 @@ namespace HJM.Chip8.MonoGameUI
             // LoadContent has been called at this point
             _spriteBatch!.Begin();
 
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
 
             for (int y = 0; y < 32; y++)
             {
@@ -123,7 +127,7 @@ namespace HJM.Chip8.MonoGameUI
                     int index = (y * 64) + x;
                     if (_chip8.State.Graphics[index] == 1 || _displayBuffer[index] > 0)
                     {
-                        _spriteBatch.Draw(_whiteRectangle, new Rectangle(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight), Color.White);
+                        _spriteBatch.Draw(_whiteRectangle, new Rectangle(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight), Microsoft.Xna.Framework.Color.White);
                         _displayBuffer[index] |= (byte)((_chip8.State.Graphics[index] << 7) & 0x80);   //If _chip8.Graphics[index] == 1, set the first bit in displayBuffer[index] to 1
                     }
                     _displayBuffer[index] = (byte)((_displayBuffer[index] >> 1) & _bufferedFrameMask);  //Shift buffered frames right, apply mask to cap amount of buffered frames
