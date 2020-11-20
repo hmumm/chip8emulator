@@ -117,7 +117,7 @@ namespace HJM.Chip8.MonoGameUI
             // LoadContent has been called at this point
             _spriteBatch!.Begin();
 
-            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
+            GraphicsDevice.Clear(Color.Black);
 
             for (int y = 0; y < 32; y++)
             {
