@@ -1,6 +1,5 @@
 ﻿using System;
 using Serilog;
-using Serilog.Configuration;
 
 namespace HJM.Chip8.MonoGameUI
 {
