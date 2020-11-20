@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading;
 using Serilog;
 using HJM.Chip8.MonoGameUI.Sound;
+using HJM.Chip8.MonoGameUI.Terminal;
 
 namespace HJM.Chip8.MonoGameUI
 {
@@ -37,8 +38,10 @@ namespace HJM.Chip8.MonoGameUI
 
         protected override void Initialize()
         {
+
+
             _chip8.Initalize();
-            _chip8.LoadGame(@"C:\Users\Hayden\Downloads\myChip8-bin-src\myChip8-bin-src\pong2.c8");
+            _chip8.LoadGame(GameSelectWindow.getSelectedFilename());
 
             _graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
