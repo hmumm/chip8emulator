@@ -10,7 +10,7 @@ Chip 8 programming language interpreter.
 
 ### To run pre release builds
 
-1. Install .net Core 3.1
+1. Install .net 5
 2. Download chip8.zip
 3. run 'dotnet HJM.Chip8.MonoGameUI.dll'
 
