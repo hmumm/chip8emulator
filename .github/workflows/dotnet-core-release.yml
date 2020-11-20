@@ -27,19 +27,19 @@ jobs:
     - name: Build win-x64
       run: |
         dotnet publish HJM.Chip8/HJM.Chip8.MonoGameUI/HJM.Chip8.MonoGameUI.csproj -c Release -r win-x64 /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained
-        cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/win-x64/publish
+        cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/net5.0/win-x64/publish
         zip -r Chip8-win-x64.zip *
         mv Chip8-win-x64.zip ../../../../../../../Chip8-win-x64.zip
     - name: Build osx-x64
       run: |
         dotnet publish HJM.Chip8/HJM.Chip8.MonoGameUI/HJM.Chip8.MonoGameUI.csproj -c Release -r osx-x64 /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained
-        cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/osx-x64/publish
+        cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/net5.0/osx-x64/publish
         zip -r Chip8-osx-x64.zip *
         mv Chip8-osx-x64.zip ../../../../../../../Chip8-osx-x64.zip
     - name: Build linux-x64
       run: |
         dotnet publish HJM.Chip8/HJM.Chip8.MonoGameUI/HJM.Chip8.MonoGameUI.csproj -c Release -r linux-x64 /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained
-        cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/netcoreapp3.1/linux-x64/publish
+        cd HJM.Chip8/HJM.Chip8.MonoGameUI/bin/Release/net5.0/linux-x64/publish
         zip -r Chip8-linux-x64.zip *
         mv Chip8-linux-x64.zip ../../../../../../../Chip8-linux-x64.zip
     - name: Get the version
