@@ -5,7 +5,7 @@ using System.Text;
 namespace HJM.Chip8.CPU.Changes
 {
     /// <summary>
-    /// Represents the changes in a CPUState
+    /// Represents the changes in a CPUState.
     /// </summary>
     public class CPUStateChange
     {
@@ -19,26 +19,26 @@ namespace HJM.Chip8.CPU.Changes
         public Change<byte>? DelayTimerChange { get; set; }
 
         /// <summary>
-        /// Increments the program counter by 2 moving to the next instruction
+        /// Increments the program counter by 2 moving to the next instruction.
         /// </summary>
-        /// <param name="oldValue">Previous value of the program counter</param>
+        /// <param name="oldValue">Previous value of the program counter.</param>
         public void IncrementProgramCounter(ushort oldValue)
         {
             ProgramCounterChange = new Change<ushort>
             {
-                NewValue = (ushort)(oldValue + 2)
+                NewValue = (ushort)(oldValue + 2),
             };
         }
 
         /// <summary>
-        /// Increments the program counter by 4 instead of 2, skipping the next instruction
+        /// Increments the program counter by 4 instead of 2, skipping the next instruction.
         /// </summary>
-        /// <param name="oldValue">Previous value of the program counter</param>
+        /// <param name="oldValue">Previous value of the program counter.</param>
         public void SkipNextInstruction(ushort oldValue)
         {
             ProgramCounterChange = new Change<ushort>
             {
-                NewValue = (ushort)(oldValue + 4)
+                NewValue = (ushort)(oldValue + 4),
             };
         }
     }

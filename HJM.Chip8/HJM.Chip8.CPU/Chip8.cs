@@ -16,13 +16,11 @@ namespace HJM.Chip8.CPU
     /// </summary>
     public class Chip8
     {
-        private Dictionary<ushort, Instruction> Instructions = new Dictionary<ushort, Instruction>();
-        public CPUState State { get; set; } = new CPUState();
-
-        private Stopwatch timerStopWatch = new Stopwatch();
         private const double TIMER_INTERVAL = (1d / 60d) * 1000d;
 
-        private readonly byte[] FONT_SET =
+        private readonly Dictionary<ushort, Instruction> instructions = new Dictionary<ushort, Instruction>();
+        private readonly Stopwatch timerStopWatch = new Stopwatch();
+        private readonly byte[] fontSet =
         {
             0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
             0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -39,13 +37,15 @@ namespace HJM.Chip8.CPU
             0xF0, 0x80, 0x80, 0x80, 0xF0, // C
             0xE0, 0x90, 0x90, 0x90, 0xE0, // D
             0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-            0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+            0xF0, 0x80, 0xF0, 0x80, 0x80, // F
         };
+
+        public CPUState State { get; set; } = new CPUState();
 
         public Chip8()
         {
             // Get all types that are Instructions under HJM.Chip8.CPU.Instructions.Chip8 namespace.
-            var types = AppDomain.CurrentDomain.GetAssemblies()
+            IEnumerable<Type>? types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(Instruction).IsAssignableFrom(p) && p.Namespace == "HJM.Chip8.CPU.Instructions.Chip8");
 
@@ -59,7 +59,7 @@ namespace HJM.Chip8.CPU
                     throw new NullReferenceException("Instruction instance was null");
                 }
 
-                Instructions.Add(instruction.OpCode, instruction);
+                instructions.Add(instruction.OpCode, instruction);
             }
         }
 
@@ -78,7 +78,9 @@ namespace HJM.Chip8.CPU
 
             // Load the font set
             for (int i = 0; i < 80; i++)
-                State.Memory[i] = FONT_SET[i];
+            {
+                State.Memory[i] = fontSet[i];
+            }
 
             State.DelayTimer = 0;
             State.SoundTimer = 0;
@@ -87,9 +89,9 @@ namespace HJM.Chip8.CPU
         }
 
         /// <summary>
-        /// Loads the game with the specified name
+        /// Loads the game with the specified name.
         /// </summary>
-        /// <param name="pathToGame">Path of the game to run</param>
+        /// <param name="pathToGame">Path of the game to run.</param>
         public void LoadGame(string pathToGame)
         {
             Log.Information($"Loading game from \"{pathToGame}\".");
@@ -115,30 +117,32 @@ namespace HJM.Chip8.CPU
         }
 
         /// <summary>
-        /// Emulates one Chip8 instruction cycle
+        /// Emulates one Chip8 instruction cycle.
         /// </summary>
         public void EmulateCycle()
         {
-            fetchOpCode();
+            FetchOpCode();
 
-            executeInstruction();
+            ExecuteInstruction();
 
-            updateTimers();
+            UpdateTimers();
         }
 
-        private void fetchOpCode()
+        private void FetchOpCode()
         {
             // Convert 2 1 byte memory addresses to 1 2 byte op code
             State.OpCode = (ushort)(State.Memory[State.ProgramCounter] << 8 | State.Memory[State.ProgramCounter + 1]);
         }
 
-        private void updateTimers()
+        private void UpdateTimers()
         {
             if (timerStopWatch.ElapsedMilliseconds > TIMER_INTERVAL)
             {
                 // Update timers
                 if (State.DelayTimer > 0)
+                {
                     State.DelayTimer--;
+                }
 
                 if (State.SoundTimer > 0)
                 {
@@ -157,12 +161,12 @@ namespace HJM.Chip8.CPU
             }
         }
 
-        private void executeInstruction()
+        private void ExecuteInstruction()
         {
             Log.Debug($"Executing OpCode {State.OpCode}");
 
             // Execute OpCode
-            Instruction? instruction = Instructions.GetValueOrDefault((ushort)(State.OpCode & 0xF000));
+            Instruction? instruction = instructions.GetValueOrDefault((ushort)(State.OpCode & 0xF000));
 
             if (instruction == null)
             {
