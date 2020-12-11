@@ -6,27 +6,27 @@ namespace HJM.Chip8.MonoGameUI.Terminal
 {
     public class GameSelectWindow
     {
-        public static string getSelectedFilename()
+        public static string GetSelectedFilename()
         {
             Application.Init();
 
             string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            var ok = new Button(3, 14, "Ok");
+            Button? ok = new Button(3, 14, "Ok");
 
             ok.Clicked += new Action(() =>
             {
                 Application.RequestStop();
             });
 
-            var dialog = new Dialog("Select Program", 60, 18, ok);
+            Dialog? dialog = new Dialog("Select Program", 60, 18, ok);
 
-            var entry = new TextField()
+            TextField? entry = new TextField()
             {
                 X = 1,
                 Y = 1,
                 Width = Dim.Fill(),
-                Height = 1
+                Height = 1,
             };
 
             entry.Text = homeDirectory;

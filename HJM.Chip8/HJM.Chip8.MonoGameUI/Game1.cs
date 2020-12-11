@@ -1,12 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using Serilog;
 using HJM.Chip8.MonoGameUI.Sound;
 using HJM.Chip8.MonoGameUI.Terminal;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Serilog;
 
 namespace HJM.Chip8.MonoGameUI
 {
@@ -14,23 +14,23 @@ namespace HJM.Chip8.MonoGameUI
     {
         private const int ClockSpeed = 500;
 
-        private readonly GraphicsDeviceManager _graphics;
-        private readonly Thread _emulatorThread;
-        private readonly CPU.Chip8 _chip8;
+        private readonly GraphicsDeviceManager graphics;
+        private readonly Thread emulatorThread;
+        private readonly CPU.Chip8 chip8;
+        private readonly byte[] displayBuffer = new byte[4096];
+        private readonly byte bufferedFrameMask = 0b_1111_0000;
+        private readonly SoundInstance soundInstance;
 
-        private SpriteBatch? _spriteBatch;
-        private Texture2D? _whiteRectangle;
-        private bool _threadStopped = false;
-        private byte[] _displayBuffer = new byte[4096];
-        private byte _bufferedFrameMask = 0b_1111_0000;
-        private SoundInstance _soundInstance;
+        private SpriteBatch? spriteBatch;
+        private Texture2D? whiteRectangle;
+        private bool threadStopped = false;
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            _emulatorThread = new Thread(RunCycles);
-            _chip8 = new CPU.Chip8();
-            _soundInstance = new SoundInstance();
+            graphics = new GraphicsDeviceManager(this);
+            emulatorThread = new Thread(RunCycles);
+            chip8 = new CPU.Chip8();
+            soundInstance = new SoundInstance();
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -38,15 +38,13 @@ namespace HJM.Chip8.MonoGameUI
 
         protected override void Initialize()
         {
+            chip8.Initalize();
+            chip8.LoadGame(GameSelectWindow.GetSelectedFilename());
 
-
-            _chip8.Initalize();
-            _chip8.LoadGame(GameSelectWindow.getSelectedFilename());
-
-            _graphics.SynchronizeWithVerticalRetrace = false;
+            graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
 
-            _emulatorThread.Start();
+            emulatorThread.Start();
             Log.Information("Emulator thread started.");
 
             base.Initialize();
@@ -54,23 +52,27 @@ namespace HJM.Chip8.MonoGameUI
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _whiteRectangle = new Texture2D(GraphicsDevice, width: 1, height: 1);
-            _whiteRectangle.SetData(new[] { Color.White });
+            whiteRectangle = new Texture2D(GraphicsDevice, width: 1, height: 1);
+            whiteRectangle.SetData(new[] { Color.White });
         }
 
         protected override void UnloadContent()
         {
             base.UnloadContent();
 
-            if (_whiteRectangle != null)
-                _whiteRectangle.Dispose();
+            if (whiteRectangle != null)
+            {
+                whiteRectangle.Dispose();
+            }
 
-            if (_spriteBatch != null)
-                _spriteBatch.Dispose();
+            if (spriteBatch != null)
+            {
+                spriteBatch.Dispose();
+            }
 
-            _threadStopped = true;
+            threadStopped = true;
             Log.Information("Emulator thread stopped.");
         }
 
@@ -81,27 +83,29 @@ namespace HJM.Chip8.MonoGameUI
 
             // If they hit esc, exit
             if (state.IsKeyDown(Keys.Escape))
+            {
                 Exit();
+            }
 
             // set all the keys
-            _chip8.State.Key[0] = Convert.ToByte(state.IsKeyDown(Keys.X));
-            _chip8.State.Key[1] = Convert.ToByte(state.IsKeyDown(Keys.D1));
-            _chip8.State.Key[2] = Convert.ToByte(state.IsKeyDown(Keys.D2));
-            _chip8.State.Key[3] = Convert.ToByte(state.IsKeyDown(Keys.D3));
-            _chip8.State.Key[4] = Convert.ToByte(state.IsKeyDown(Keys.Q));
-            _chip8.State.Key[5] = Convert.ToByte(state.IsKeyDown(Keys.W));
-            _chip8.State.Key[6] = Convert.ToByte(state.IsKeyDown(Keys.E));
-            _chip8.State.Key[7] = Convert.ToByte(state.IsKeyDown(Keys.A));
-            _chip8.State.Key[8] = Convert.ToByte(state.IsKeyDown(Keys.S));
-            _chip8.State.Key[9] = Convert.ToByte(state.IsKeyDown(Keys.D));
-            _chip8.State.Key[0xA] = Convert.ToByte(state.IsKeyDown(Keys.Z));
-            _chip8.State.Key[0xB] = Convert.ToByte(state.IsKeyDown(Keys.C));
-            _chip8.State.Key[0xC] = Convert.ToByte(state.IsKeyDown(Keys.D4));
-            _chip8.State.Key[0xD] = Convert.ToByte(state.IsKeyDown(Keys.R));
-            _chip8.State.Key[0xE] = Convert.ToByte(state.IsKeyDown(Keys.F));
-            _chip8.State.Key[0xF] = Convert.ToByte(state.IsKeyDown(Keys.V));
+            chip8.State.Key[0] = Convert.ToByte(state.IsKeyDown(Keys.X));
+            chip8.State.Key[1] = Convert.ToByte(state.IsKeyDown(Keys.D1));
+            chip8.State.Key[2] = Convert.ToByte(state.IsKeyDown(Keys.D2));
+            chip8.State.Key[3] = Convert.ToByte(state.IsKeyDown(Keys.D3));
+            chip8.State.Key[4] = Convert.ToByte(state.IsKeyDown(Keys.Q));
+            chip8.State.Key[5] = Convert.ToByte(state.IsKeyDown(Keys.W));
+            chip8.State.Key[6] = Convert.ToByte(state.IsKeyDown(Keys.E));
+            chip8.State.Key[7] = Convert.ToByte(state.IsKeyDown(Keys.A));
+            chip8.State.Key[8] = Convert.ToByte(state.IsKeyDown(Keys.S));
+            chip8.State.Key[9] = Convert.ToByte(state.IsKeyDown(Keys.D));
+            chip8.State.Key[0xA] = Convert.ToByte(state.IsKeyDown(Keys.Z));
+            chip8.State.Key[0xB] = Convert.ToByte(state.IsKeyDown(Keys.C));
+            chip8.State.Key[0xC] = Convert.ToByte(state.IsKeyDown(Keys.D4));
+            chip8.State.Key[0xD] = Convert.ToByte(state.IsKeyDown(Keys.R));
+            chip8.State.Key[0xE] = Convert.ToByte(state.IsKeyDown(Keys.F));
+            chip8.State.Key[0xF] = Convert.ToByte(state.IsKeyDown(Keys.V));
 
-            _soundInstance.Update();
+            soundInstance.Update();
 
             base.Update(gameTime);
         }
@@ -115,7 +119,7 @@ namespace HJM.Chip8.MonoGameUI
             int pixelHeight = screenHeight / 32;
 
             // LoadContent has been called at this point
-            _spriteBatch!.Begin();
+            spriteBatch!.Begin();
 
             GraphicsDevice.Clear(Color.Black);
 
@@ -124,18 +128,19 @@ namespace HJM.Chip8.MonoGameUI
                 for (int x = 0; x < 64; x++)
                 {
                     int index = (y * 64) + x;
-                    if (_chip8.State.Graphics[index] == 1 || _displayBuffer[index] > 0)
+                    if (chip8.State.Graphics[index] == 1 || displayBuffer[index] > 0)
                     {
-                        _spriteBatch.Draw(_whiteRectangle, new Rectangle(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight), Color.White);
-                        _displayBuffer[index] |= (byte)((_chip8.State.Graphics[index] << 7) & 0x80);   //If _chip8.Graphics[index] == 1, set the first bit in displayBuffer[index] to 1
+                        spriteBatch.Draw(whiteRectangle, new Rectangle(x * pixelWidth, y * pixelHeight, pixelWidth, pixelHeight), Color.White);
+                        displayBuffer[index] |= (byte)((chip8.State.Graphics[index] << 7) & 0x80);   // If _chip8.Graphics[index] == 1, set the first bit in displayBuffer[index] to 1
                     }
-                    _displayBuffer[index] = (byte)((_displayBuffer[index] >> 1) & _bufferedFrameMask);  //Shift buffered frames right, apply mask to cap amount of buffered frames
+
+                    displayBuffer[index] = (byte)((displayBuffer[index] >> 1) & bufferedFrameMask);  // Shift buffered frames right, apply mask to cap amount of buffered frames
                 }
             }
 
-            _spriteBatch.End();
+            spriteBatch.End();
 
-            if (_chip8.State.SoundFlag)
+            if (chip8.State.SoundFlag)
             {
                 // play sound
             }
@@ -150,17 +155,17 @@ namespace HJM.Chip8.MonoGameUI
             Stopwatch s = new Stopwatch();
             s.Start();
 
-            while (!_threadStopped)
+            while (!threadStopped)
             {
-                _chip8.EmulateCycle();
+                chip8.EmulateCycle();
 
-                if (_chip8.State.SoundFlag == true)
+                if (chip8.State.SoundFlag == true)
                 {
-                    _soundInstance.PlaySound();
+                    soundInstance.PlaySound();
                 }
                 else
                 {
-                    _soundInstance.StopPlayingSound();
+                    soundInstance.StopPlayingSound();
                 }
 
                 while (s.ElapsedMilliseconds < millesecondsPerCycle)

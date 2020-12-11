@@ -8,14 +8,16 @@ namespace HJM.Chip8.CPU
     public class CPUState
     {
         /// <summary>
-        /// Whether sound should be played or not 
+        /// Whether sound should be played or not.
         /// </summary>
         public bool SoundFlag { get; set; }
+
         public ushort OpCode { get; set; }
+
         /// <summary>
         /// 0x000-0x1FF - Chip 8 interpreter(contains font set in emu)
         /// 0x050-0x0A0 - Used for the built in 4x5 pixel font set(0-F)
-        /// 0x200-0xFFF - Program ROM and work RAM
+        /// 0x200-0xFFF - Program ROM and work RAM.
         /// </summary>
         public byte[] Memory { get; set; } = new byte[4096];
         public byte[] Registers { get; set; } = new byte[16];
@@ -29,29 +31,29 @@ namespace HJM.Chip8.CPU
         public byte[] Key { get; set; } = new byte[16];
 
         /// <summary>
-        /// Apply the given state change
+        /// Apply the given state change.
         /// </summary>
-        /// <param name="stateChange">state change to apply</param>
+        /// <param name="stateChange">state change to apply.</param>
         public void ApplyStateChange(CPUStateChange stateChange)
         {
-            applyRegisterChanges(stateChange);
+            ApplyRegisterChanges(stateChange);
 
-            applyMemoryChanges(stateChange);
+            ApplyMemoryChanges(stateChange);
 
-            applyGraphicsChanges(stateChange);
+            ApplyGraphicsChanges(stateChange);
 
-            applyProgramRegisterChange(stateChange);
+            ApplyProgramRegisterChange(stateChange);
 
-            applyIndexRegisterChange(stateChange);
+            ApplyIndexRegisterChange(stateChange);
 
-            applyStackChange(stateChange);
+            ApplyStackChange(stateChange);
 
-            applySoundTimerChange(stateChange);
+            ApplySoundTimerChange(stateChange);
 
-            applyDelayTimerChange(stateChange);
+            ApplyDelayTimerChange(stateChange);
         }
 
-        private void applyRegisterChanges(CPUStateChange stateChange)
+        private void ApplyRegisterChanges(CPUStateChange stateChange)
         {
             foreach (ArrayChange<byte> registerChange in stateChange.RegisterChanges)
             {
@@ -59,14 +61,15 @@ namespace HJM.Chip8.CPU
             }
         }
 
-        private void applyMemoryChanges(CPUStateChange stateChange)
+        private void ApplyMemoryChanges(CPUStateChange stateChange)
         {
             foreach (ArrayChange<byte> memoryChange in stateChange.MemoryChanges)
             {
                 Memory[memoryChange.IndexChanged] = memoryChange.NewValue;
             }
         }
-        private void applyGraphicsChanges(CPUStateChange stateChange)
+
+        private void ApplyGraphicsChanges(CPUStateChange stateChange)
         {
             foreach (ArrayChange<byte> graphicChange in stateChange.GraphicsChanges)
             {
@@ -74,7 +77,7 @@ namespace HJM.Chip8.CPU
             }
         }
 
-        private void applyProgramRegisterChange(CPUStateChange stateChange)
+        private void ApplyProgramRegisterChange(CPUStateChange stateChange)
         {
             if (stateChange.ProgramCounterChange != null)
             {
@@ -82,7 +85,7 @@ namespace HJM.Chip8.CPU
             }
         }
 
-        private void applyIndexRegisterChange(CPUStateChange stateChange)
+        private void ApplyIndexRegisterChange(CPUStateChange stateChange)
         {
             if (stateChange.IndexRegisterChange != null)
             {
@@ -90,7 +93,7 @@ namespace HJM.Chip8.CPU
             }
         }
 
-        private void applyStackChange(CPUStateChange stateChange)
+        private void ApplyStackChange(CPUStateChange stateChange)
         {
             if (stateChange.StackChange != null)
             {
@@ -106,7 +109,7 @@ namespace HJM.Chip8.CPU
             }
         }
 
-        private void applySoundTimerChange(CPUStateChange stateChange)
+        private void ApplySoundTimerChange(CPUStateChange stateChange)
         {
             if (stateChange.SoundTimerChange != null)
             {
@@ -114,7 +117,7 @@ namespace HJM.Chip8.CPU
             }
         }
 
-        private void applyDelayTimerChange(CPUStateChange stateChange)
+        private void ApplyDelayTimerChange(CPUStateChange stateChange)
         {
             if (stateChange.DelayTimerChange != null)
             {

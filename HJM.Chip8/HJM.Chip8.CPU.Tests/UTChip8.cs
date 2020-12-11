@@ -21,6 +21,7 @@ namespace HJM.Chip8.CPU.Tests
             // set the first instruction to 0x00E0
             chip8.State.Memory[0x0200] = 0x00;
             chip8.State.Memory[0x0201] = 0xE0;
+
             // change the graphics memory
             chip8.State.Graphics[0] = 0xF;
             chip8.EmulateCycle();
@@ -374,7 +375,7 @@ namespace HJM.Chip8.CPU.Tests
 
             chip8.EmulateCycle();
 
-            Assert.True(0 < chip8.State.Registers[0] && 255 > chip8.State.Registers[0]);
+            Assert.True(chip8.State.Registers[0] > 0 && chip8.State.Registers[0] < 255);
         }
 
         // TODO make this actually check the graphics memory
